@@ -13,10 +13,11 @@ import java.util.Map;
  */
 public class HttpUtil {
 
+	public static final String CONTENT_TYPE = "application/x-www-form-urlencoded";
+	
     public static String post(String requestUrl, String accessToken, String params)
             throws Exception {
-        String contentType = "application/x-www-form-urlencoded";
-        return HttpUtil.post(requestUrl, accessToken, contentType, params);
+        return HttpUtil.post(requestUrl, accessToken, CONTENT_TYPE, params);
     }
 
     public static String post(String requestUrl, String accessToken, String contentType, String params)
