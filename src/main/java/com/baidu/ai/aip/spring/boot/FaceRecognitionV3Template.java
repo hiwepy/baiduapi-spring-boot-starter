@@ -125,11 +125,11 @@ public class FaceRecognitionV3Template {
 	}
 
 	public String detect(byte[] imageBytes) {
-		return detect(imageBytes, "LIVE");
+		return detect(imageBytes, FaceType.LIVE);
 	}
 	
-	public String detect(byte[] imageBytes, String face_type) {
-		return detect(imageBytes, face_type, "NONE");
+	public String detect(byte[] imageBytes, FaceType face_type) {
+		return detect(imageBytes, face_type, FaceLiveness.NONE);
 	}
 	
 	/**
@@ -140,16 +140,16 @@ public class FaceRecognitionV3Template {
 	 *                         IDCARD表示身份证芯片照：二代身份证内置芯片中的人像照片
 	 *                         WATERMARK表示带水印证件照：一般为带水印的小图，如公安网小图
 	 *                         CERT表示证件照片：如拍摄的身份证、工卡、护照、学生证等证件图片 默认LIVE
-	 * @param liveness_control 活体控制 检测结果中不符合要求的人脸会被过滤 NONE: 不进行控制 LOW:较低的活体要求(高通过率
+	 * @param liveness		        活体控制 检测结果中不符合要求的人脸会被过滤 NONE: 不进行控制 LOW:较低的活体要求(高通过率
 	 *                         低攻击拒绝率) NORMAL: 一般的活体要求(平衡的攻击拒绝率, 通过率) HIGH:
 	 *                         较高的活体要求(高攻击拒绝率 低通过率) 默认NONE
 	 * @author ： <a href="https://github.com/vindell">wandl</a>
 	 * @return
 	 */
-	public String detect(byte[] imageBytes, String face_type, String liveness_control) {
+	public String detect(byte[] imageBytes, FaceType face_type, FaceLiveness liveness) {
 		try {
 			String imgStr = Base64Util.encode(imageBytes);
-			return detect(imgStr, face_type, liveness_control);
+			return detect(imgStr, face_type, liveness);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -157,11 +157,11 @@ public class FaceRecognitionV3Template {
 	}
 	
 	public String detect(String imageBase64) {
-		return detect(imageBase64, "LIVE");
+		return detect(imageBase64, FaceType.LIVE);
 	}
 	
-	public String detect(String imageBase64, String face_type) {
-		return detect(imageBase64, face_type, "NONE");
+	public String detect(String imageBase64, FaceType face_type) {
+		return detect(imageBase64, face_type, FaceLiveness.NONE);
 	}
 	
 	/**
@@ -174,13 +174,13 @@ public class FaceRecognitionV3Template {
 	 *                         IDCARD表示身份证芯片照：二代身份证内置芯片中的人像照片
 	 *                         WATERMARK表示带水印证件照：一般为带水印的小图，如公安网小图
 	 *                         CERT表示证件照片：如拍摄的身份证、工卡、护照、学生证等证件图片 默认LIVE
-	 * @param liveness_control 活体控制 检测结果中不符合要求的人脸会被过滤 NONE: 不进行控制 LOW:较低的活体要求(高通过率
+	 * @param liveness 活体控制 检测结果中不符合要求的人脸会被过滤 NONE: 不进行控制 LOW:较低的活体要求(高通过率
 	 *                         低攻击拒绝率) NORMAL: 一般的活体要求(平衡的攻击拒绝率, 通过率) HIGH:
 	 *                         较高的活体要求(高攻击拒绝率 低通过率) 默认NONE
 	 * @author ： <a href="https://github.com/vindell">wandl</a>
 	 * @return
 	 */
-	public String detect(String imageBase64, String face_type, String liveness_control) {
+	public String detect(String imageBase64, FaceType face_type, FaceLiveness liveness) {
 		
 
 		try {
@@ -220,15 +220,15 @@ public class FaceRecognitionV3Template {
 	}
 	
 	public String match(byte[] imageBytes_1, byte[] imageBytes_2) {
-		return match(imageBytes_1, imageBytes_2, "LIVE");
+		return match(imageBytes_1, imageBytes_2, FaceType.LIVE);
 	}
 	
-	public String match(byte[] imageBytes_1, byte[] imageBytes_2, String face_type) {
-		return match(imageBytes_1, imageBytes_2, face_type, "LOW");
+	public String match(byte[] imageBytes_1, byte[] imageBytes_2, FaceType face_type) {
+		return match(imageBytes_1, imageBytes_2, face_type, FaceQuality.LOW);
 	}
 	
-	public String match(byte[] imageBytes_1, byte[] imageBytes_2, String face_type, String quality_control) {
-		return match(imageBytes_1, imageBytes_2, face_type, quality_control, "NORMAL");
+	public String match(byte[] imageBytes_1, byte[] imageBytes_2, FaceType face_type, FaceQuality quality) {
+		return match(imageBytes_1, imageBytes_2, face_type, quality, FaceLiveness.NORMAL);
 	}
 	
 	/**
@@ -241,29 +241,29 @@ public class FaceRecognitionV3Template {
 	 *                         IDCARD表示身份证芯片照：二代身份证内置芯片中的人像照片
 	 *                         WATERMARK表示带水印证件照：一般为带水印的小图，如公安网小图
 	 *                         CERT表示证件照片：如拍摄的身份证、工卡、护照、学生证等证件图片 默认LIVE
-	 * @param quality_control  图片质量控制 NONE: 不进行控制 LOW:较低的质量要求 NORMAL: 一般的质量要求 HIGH:
+	 * @param quality  图片质量控制 NONE: 不进行控制 LOW:较低的质量要求 NORMAL: 一般的质量要求 HIGH:
 	 *                         较高的质量要求 默认 NONE 若图片质量不满足要求，则返回结果中会提示质量检测失败
-	 * @param liveness_control 活体控制 检测结果中不符合要求的人脸会被过滤 NONE: 不进行控制 LOW:较低的活体要求(高通过率
+	 * @param liveness 活体控制 检测结果中不符合要求的人脸会被过滤 NONE: 不进行控制 LOW:较低的活体要求(高通过率
 	 *                         低攻击拒绝率) NORMAL: 一般的活体要求(平衡的攻击拒绝率, 通过率) HIGH:
 	 *                         较高的活体要求(高攻击拒绝率 低通过率) 默认NONE
 	 * @return
 	 */
-	public String match(byte[] imageBytes_1, byte[] imageBytes_2, String face_type, String quality_control, String liveness_control) {
+	public String match(byte[] imageBytes_1, byte[] imageBytes_2, FaceType face_type, FaceQuality quality, FaceLiveness liveness) {
 		String imageBase64_1 = Base64Util.encode(imageBytes_1);
 		String imageBase64_2 = Base64Util.encode(imageBytes_2);
-		return match(imageBase64_1, imageBase64_2, face_type, quality_control, liveness_control);
+		return match(imageBase64_1, imageBase64_2, face_type, quality, liveness);
 	}
 
 	public String match(String imageBase64_1, String imageBase64_2) {
-		return match(imageBase64_1, imageBase64_2, "LIVE");
+		return match(imageBase64_1, imageBase64_2, FaceType.LIVE);
 	}
 	
-	public String match(String imageBase64_1, String imageBase64_2, String face_type) {
-		return match(imageBase64_1, imageBase64_2, face_type, "LOW");
+	public String match(String imageBase64_1, String imageBase64_2, FaceType face_type) {
+		return match(imageBase64_1, imageBase64_2, face_type, FaceQuality.LOW);
 	}
 	
-	public String match(String imageBase64_1, String imageBase64_2, String face_type, String quality_control) {
-		return match(imageBase64_1, imageBase64_2, face_type, quality_control, "NORMAL");
+	public String match(String imageBase64_1, String imageBase64_2, FaceType face_type, FaceQuality quality) {
+		return match(imageBase64_1, imageBase64_2, face_type, quality,  FaceLiveness.NORMAL);
 	}
 	
 	/**
@@ -279,15 +279,15 @@ public class FaceRecognitionV3Template {
 	 *                         IDCARD表示身份证芯片照：二代身份证内置芯片中的人像照片
 	 *                         WATERMARK表示带水印证件照：一般为带水印的小图，如公安网小图
 	 *                         CERT表示证件照片：如拍摄的身份证、工卡、护照、学生证等证件图片 默认LIVE
-	 * @param quality_control  图片质量控制； NONE: 不进行控制； LOW:较低的质量要求； NORMAL: 一般的质量要求；
+	 * @param quality  图片质量控制； NONE: 不进行控制； LOW:较低的质量要求； NORMAL: 一般的质量要求；
 	 *                         HIGH: 较高的质量要求； 默认 NONE； 若图片质量不满足要求，则返回结果中会提示质量检测失败
-	 * @param liveness_control 活体控制 检测结果中不符合要求的人脸会被过滤； NONE: 不进行控制 ；LOW:较低的活体要求(高通过率
+	 * @param liveness 活体控制 检测结果中不符合要求的人脸会被过滤； NONE: 不进行控制 ；LOW:较低的活体要求(高通过率
 	 *                         低攻击拒绝率)； NORMAL: 一般的活体要求(平衡的攻击拒绝率, 通过率)； HIGH:
 	 *                         较高的活体要求(高攻击拒绝率 低通过率)； 默认NONE
 	 * @author ： <a href="https://github.com/vindell">wandl</a>
 	 * @return
 	 */
-	public String match(String imageBase64_1, String imageBase64_2, String face_type, String quality_control, String liveness_control) {
+	public String match(String imageBase64_1, String imageBase64_2, FaceType face_type, FaceQuality quality, FaceLiveness liveness) {
 		try {
 
 			List<Map<String, Object>> images = new ArrayList<>();
@@ -295,16 +295,16 @@ public class FaceRecognitionV3Template {
 			Map<String, Object> map1 = new HashMap<>();
 			map1.put("image", imageBase64_1);
 			map1.put("image_type", "BASE64");
-			map1.put("face_type", face_type);
-			map1.put("quality_control", quality_control);
-			map1.put("liveness_control", liveness_control);
+			map1.put("face_type", face_type.name());
+			map1.put("quality_control", quality.name());
+			map1.put("liveness_control", liveness.name());
 
 			Map<String, Object> map2 = new HashMap<>();
 			map2.put("image", imageBase64_2);
 			map2.put("image_type", "BASE64");
-			map2.put("face_type", face_type);
-			map2.put("quality_control", quality_control);
-			map2.put("liveness_control", liveness_control);
+			map2.put("face_type", face_type.name());
+			map2.put("quality_control", quality.name());
+			map2.put("liveness_control", liveness.name());
 
 			images.add(map1);
 			images.add(map2);
@@ -323,18 +323,26 @@ public class FaceRecognitionV3Template {
 		return null;
 	}
 
+	public String search(String imageBase64, String group_id_list) {
+		return search(imageBase64, group_id_list, FaceQuality.LOW);
+	}
+	
+	public String search(String imageBase64, String group_id_list, FaceQuality quality) {
+		return search(imageBase64, group_id_list, quality, FaceLiveness.NORMAL);
+	}
+	
 	/**
 	 * 人脸搜索 : https://ai.baidu.com/docs#/Face-Search-V3/top
 	 */
-	public String search(String imageBase64, String group_id_list, String quality_control, String liveness_control) {
+	public String search(String imageBase64, String group_id_list, FaceQuality quality, FaceLiveness liveness) {
 		try {
 			Map<String, Object> map = new HashMap<>();
 			// 图片信息(总数据大小应小于10M)，图片上传方式根据image_type来判断
 			map.put("image", imageBase64);
 			map.put("image_type", "FACE_TOKEN");
 			map.put("group_id_list", group_id_list);
-			map.put("liveness_control", liveness_control);
-			map.put("quality_control", quality_control);
+			map.put("liveness_control", quality.name());
+			map.put("quality_control", liveness.name());
 			map.put("max_user_num", properties.getMaxUserNum());
 			
 			String param = JSONObject.toJSONString(map);
@@ -363,14 +371,14 @@ public class FaceRecognitionV3Template {
 	 * @param group_id         用户组id，标识一组用户（由数字、字母、下划线组成），长度限制48B。产品建议：根据您的业务需求，可以将需要注册的用户，按照业务划分，分配到不同的group下，例如按照会员手机尾号作为groupid，用于刷脸支付、会员计费消费等，这样可以尽可能控制每个group下的用户数与人脸数，提升检索的准确率
 	 * @param user_id          用户id（由数字、字母、下划线组成），长度限制128B
 	 * @param user_info        用户资料，长度限制256B 默认空
-	 * @param quality_control  图片质量控制； NONE: 不进行控制； LOW:较低的质量要求； NORMAL: 一般的质量要求；
+	 * @param quality  图片质量控制； NONE: 不进行控制； LOW:较低的质量要求； NORMAL: 一般的质量要求；
 	 *                         HIGH: 较高的质量要求； 默认 NONE； 若图片质量不满足要求，则返回结果中会提示质量检测失败
-	 * @param liveness_control 活体控制 检测结果中不符合要求的人脸会被过滤； NONE: 不进行控制 ；LOW:较低的活体要求(高通过率
+	 * @param liveness 活体控制 检测结果中不符合要求的人脸会被过滤； NONE: 不进行控制 ；LOW:较低的活体要求(高通过率
 	 *                         低攻击拒绝率)； NORMAL: 一般的活体要求(平衡的攻击拒绝率, 通过率)； HIGH:
 	 *                         较高的活体要求(高攻击拒绝率 低通过率)； 默认NONE
 	 * @return
 	 */
-	public String faceNew(String imageBase64, String group_id, String user_id, String user_info, String quality_control, String liveness_control) {
+	public String faceNew(String imageBase64, String group_id, String user_id, String user_info, FaceQuality quality, FaceLiveness liveness) {
 		 try {
 			 
             Map<String, Object> map = new HashMap<>();
@@ -379,10 +387,10 @@ public class FaceRecognitionV3Template {
             map.put("group_id", group_id);
             map.put("user_id", user_id);
             map.put("user_info", user_info);
-            map.put("quality_control", quality_control);
-            map.put("liveness_control", liveness_control);
+            map.put("quality_control", quality.name());
+            map.put("liveness_control", liveness.name());
             /*
-             * 操作方式
+             	* 操作方式
 				APPEND: 当user_id在库中已经存在时，对此user_id重复注册时，新注册的图片默认会追加到该user_id下
 				REPLACE : 当对此user_id重复注册时,则会用新图替换库中该user_id下所有图片
 				默认使用APPEND
@@ -414,14 +422,14 @@ public class FaceRecognitionV3Template {
 	 * @param group_id         用户组id，标识一组用户（由数字、字母、下划线组成），长度限制48B。产品建议：根据您的业务需求，可以将需要注册的用户，按照业务划分，分配到不同的group下，例如按照会员手机尾号作为groupid，用于刷脸支付、会员计费消费等，这样可以尽可能控制每个group下的用户数与人脸数，提升检索的准确率
 	 * @param user_id          用户id（由数字、字母、下划线组成），长度限制128B
 	 * @param user_info        用户资料，长度限制256B 默认空
-	 * @param quality_control  图片质量控制； NONE: 不进行控制； LOW:较低的质量要求； NORMAL: 一般的质量要求；
+	 * @param quality  图片质量控制； NONE: 不进行控制； LOW:较低的质量要求； NORMAL: 一般的质量要求；
 	 *                         HIGH: 较高的质量要求； 默认 NONE； 若图片质量不满足要求，则返回结果中会提示质量检测失败
-	 * @param liveness_control 活体控制 检测结果中不符合要求的人脸会被过滤； NONE: 不进行控制 ；LOW:较低的活体要求(高通过率
+	 * @param liveness 活体控制 检测结果中不符合要求的人脸会被过滤； NONE: 不进行控制 ；LOW:较低的活体要求(高通过率
 	 *                         低攻击拒绝率)； NORMAL: 一般的活体要求(平衡的攻击拒绝率, 通过率)； HIGH:
 	 *                         较高的活体要求(高攻击拒绝率 低通过率)； 默认NONE
 	 * @return
 	 */
-	public String faceRenew(String imageBase64, String group_id, String user_id, String user_info, String quality_control, String liveness_control) {
+	public String faceRenew(String imageBase64, String group_id, String user_id, String user_info, FaceQuality quality, FaceLiveness liveness) {
 		 try {
 			 
             Map<String, Object> map = new HashMap<>();
@@ -430,10 +438,10 @@ public class FaceRecognitionV3Template {
             map.put("group_id", group_id);
             map.put("user_id", user_id);
             map.put("user_info", user_info);
-            map.put("quality_control", quality_control);
-            map.put("liveness_control", liveness_control);
+            map.put("quality_control", quality.name());
+            map.put("liveness_control", liveness.name());
             /*
-             * 操作方式
+             	* 操作方式
 				APPEND: 当user_id在库中已经存在时，对此user_id重复注册时，新注册的图片默认会追加到该user_id下
 				REPLACE : 当对此user_id重复注册时,则会用新图替换库中该user_id下所有图片
 				默认使用APPEND
@@ -719,11 +727,11 @@ public class FaceRecognitionV3Template {
 	}
 	
 	public String personverify(String imageBase64, String id_card_number, String name) {
-		return personverify(imageBase64, id_card_number, name, "LOW");
+		return personverify(imageBase64, id_card_number, name, FaceQuality.LOW);
 	}
 	
-	public String personverify(String imageBase64, String id_card_number, String name, String quality_control) {
-		return personverify(imageBase64, id_card_number, name, quality_control, "HIGH");
+	public String personverify(String imageBase64, String id_card_number, String name, FaceQuality quality) {
+		return personverify(imageBase64, id_card_number, name, quality, FaceLiveness.HIGH);
 	}
 	
 	/**
@@ -732,14 +740,14 @@ public class FaceRecognitionV3Template {
 	 * @param imageBase64      图片信息(总数据大小应小于10M)，图片上传方式根据image_type来判断
 	 * @param id_card_number   身份证号码
 	 * @param name             姓名（真实姓名，和身份证号匹配）
-	 * @param quality_control  图片质量控制 NONE: 不进行控制 LOW:较低的质量要求 NORMAL: 一般的质量要求 HIGH:
+	 * @param quality  图片质量控制 NONE: 不进行控制 LOW:较低的质量要求 NORMAL: 一般的质量要求 HIGH:
 	 *                         较高的质量要求 默认 NONE 若图片质量不满足要求，则返回结果中会提示质量检测失败
-	 * @param liveness_control 活体控制 检测结果中不符合要求的人脸会被过滤 NONE: 不进行控制 LOW:较低的活体要求(高通过率
+	 * @param liveness 活体控制 检测结果中不符合要求的人脸会被过滤 NONE: 不进行控制 LOW:较低的活体要求(高通过率
 	 *                         低攻击拒绝率) NORMAL: 一般的活体要求(平衡的攻击拒绝率, 通过率) HIGH:
 	 *                         较高的活体要求(高攻击拒绝率 低通过率) 默认NONE
 	 * @return
 	 */
-	public String personverify(String imageBase64, String id_card_number, String name, String quality_control, String liveness_control) {
+	public String personverify(String imageBase64, String id_card_number, String name, FaceQuality quality, FaceLiveness liveness) {
         try {
         	
             Map<String, Object> map = new HashMap<>();
@@ -748,8 +756,8 @@ public class FaceRecognitionV3Template {
             map.put("image_type", "BASE64");
             map.put("id_card_number", id_card_number);
             map.put("name", URLEncoder.encode(name, "UTF-8"));
-            map.put("quality_control", quality_control);
-            map.put("liveness_control", liveness_control);
+            map.put("quality_control", quality.name());
+            map.put("liveness_control", liveness.name());
 
             String param = JSONObject.toJSONString(map);
 
