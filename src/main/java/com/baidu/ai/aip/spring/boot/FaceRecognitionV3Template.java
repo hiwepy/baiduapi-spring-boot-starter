@@ -780,7 +780,7 @@ public class FaceRecognitionV3Template {
 	 * @param option      场景信息，程序会视不同的场景选用相对应的模型。当前支持的场景有COMMON(通用场景)，GATE(闸机场景)，默认使用COMMON
 	 * @return
 	 */
-	public String faceVerify(String imageBase64, String option) {
+	public String faceVerify(String imageBase64, FaceOption option) {
        
         try {
 
@@ -789,7 +789,7 @@ public class FaceRecognitionV3Template {
             map.put("image", imageBase64);
             map.put("image_type", "BASE64");
             map.put("face_field", "age,beauty,expression,face_shape,gender,glasses,landmark,race,quality,face_type");
-            map.put("option", option);
+            map.put("option", option.name());
 
             String param = JSONObject.toJSONString(map);
             // 注意：access_token的有效期为30天，切记需要每30天进行定期更换，或者每次请求都拉取新token；
