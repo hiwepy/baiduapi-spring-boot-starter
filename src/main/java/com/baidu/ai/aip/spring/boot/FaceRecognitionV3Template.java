@@ -322,7 +322,17 @@ public class FaceRecognitionV3Template {
 		}
 		return null;
 	}
-
+	
+	public String search(byte[] imageBytes, String group_id_list) {
+		String imageBase64 = Base64Util.encode(imageBytes);
+		return search(imageBase64, group_id_list, FaceQuality.LOW);
+	}
+	
+	public String search(byte[] imageBytes, String group_id_list, FaceQuality quality) {
+		String imageBase64 = Base64Util.encode(imageBytes);
+		return search(imageBase64, group_id_list, quality, FaceLiveness.NORMAL);
+	}
+	
 	public String search(String imageBase64, String group_id_list) {
 		return search(imageBase64, group_id_list, FaceQuality.LOW);
 	}
@@ -726,6 +736,17 @@ public class FaceRecognitionV3Template {
         return null;
 	}
 	
+	
+	public String personverify(byte[] imageBytes, String id_card_number, String name) {
+		String imageBase64 = Base64Util.encode(imageBytes);
+		return personverify(imageBase64, id_card_number, name, FaceQuality.LOW);
+	}
+	
+	public String personverify(byte[] imageBytes, String id_card_number, String name, FaceQuality quality) {
+		String imageBase64 = Base64Util.encode(imageBytes);
+		return personverify(imageBase64, id_card_number, name, quality, FaceLiveness.HIGH);
+	}
+	
 	public String personverify(String imageBase64, String id_card_number, String name) {
 		return personverify(imageBase64, id_card_number, name, FaceQuality.LOW);
 	}
@@ -772,6 +793,11 @@ public class FaceRecognitionV3Template {
         }
         return null;
     }
+	
+	public String faceVerify(byte[] imageBytes, FaceOption option) {
+		String imageBase64 = Base64Util.encode(imageBytes);
+		return faceVerify(imageBase64, option);
+	}
 	
 	/**
 	 * 在线活体检测：https://ai.baidu.com/docs#/Face-Liveness-V3/top
