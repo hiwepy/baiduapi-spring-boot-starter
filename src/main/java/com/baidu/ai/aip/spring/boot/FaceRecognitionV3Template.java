@@ -830,6 +830,12 @@ public class FaceRecognitionV3Template {
         return null;
     }
 	
+	public String merge(byte[] templateBytes, byte[] targetBytes) {
+		String templateBase64 = Base64Util.encode(templateBytes);
+		String targetBase64 = Base64Util.encode(targetBytes);
+		return merge(templateBase64, targetBase64);
+	}
+	
 	/**
 	 * 人脸融合 
 	 * https://ai.baidu.com/docs#/Face-Merge/top
