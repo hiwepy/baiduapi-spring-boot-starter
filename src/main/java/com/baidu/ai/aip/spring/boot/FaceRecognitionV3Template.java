@@ -124,11 +124,11 @@ public class FaceRecognitionV3Template {
 
 	}
 
-	public String detect(byte[] imageBytes) {
+	public JSONObject detect(byte[] imageBytes) {
 		return detect(imageBytes, FaceType.LIVE);
 	}
 	
-	public String detect(byte[] imageBytes, FaceType face_type) {
+	public JSONObject detect(byte[] imageBytes, FaceType face_type) {
 		return detect(imageBytes, face_type, FaceLiveness.NONE);
 	}
 	
@@ -146,7 +146,7 @@ public class FaceRecognitionV3Template {
 	 * @author ： <a href="https://github.com/vindell">wandl</a>
 	 * @return
 	 */
-	public String detect(byte[] imageBytes, FaceType face_type, FaceLiveness liveness) {
+	public JSONObject detect(byte[] imageBytes, FaceType face_type, FaceLiveness liveness) {
 		try {
 			String imgStr = Base64Util.encode(imageBytes);
 			return detect(imgStr, face_type, liveness);
@@ -156,11 +156,11 @@ public class FaceRecognitionV3Template {
 		return null;
 	}
 	
-	public String detect(String imageBase64) {
+	public JSONObject detect(String imageBase64) {
 		return detect(imageBase64, FaceType.LIVE);
 	}
 	
-	public String detect(String imageBase64, FaceType face_type) {
+	public JSONObject detect(String imageBase64, FaceType face_type) {
 		return detect(imageBase64, face_type, FaceLiveness.NONE);
 	}
 	
@@ -180,7 +180,7 @@ public class FaceRecognitionV3Template {
 	 * @author ： <a href="https://github.com/vindell">wandl</a>
 	 * @return
 	 */
-	public String detect(String imageBase64, FaceType face_type, FaceLiveness liveness) {
+	public JSONObject detect(String imageBase64, FaceType face_type, FaceLiveness liveness) {
 		
 
 		try {
@@ -200,7 +200,7 @@ public class FaceRecognitionV3Template {
 			 * 默认只返回face_token、人脸框、概率和旋转角度
 			 */
 			map.put("face_field", "age,beauty,expression,face_shape,gender,glasses,landmark,landmark150,race,quality,eye_status,emotion,face_type");
-			map.put("face_type", "FACE_TOKEN");
+			map.put("face_type", face_type.name());
 			
 			// 最多处理人脸的数目，默认值为1，仅检测图片中面积最大的那个人脸；最大值10，检测图片中面积最大的几张人脸。
 			map.put("max_face_num", "1");
@@ -211,23 +211,23 @@ public class FaceRecognitionV3Template {
 			String accessToken = getAccessToken(properties.getClientId(), properties.getClientSecret());
 
 			String result = HttpUtil.post(FACE_DETECT_URL, accessToken, CONTENT_TYPE, param);
-			System.out.println(result);
-			return result;
+			
+			return JSONObject.parseObject(result);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return null;
 	}
 	
-	public String match(byte[] imageBytes_1, byte[] imageBytes_2) {
+	public JSONObject match(byte[] imageBytes_1, byte[] imageBytes_2) {
 		return match(imageBytes_1, imageBytes_2, FaceType.LIVE);
 	}
 	
-	public String match(byte[] imageBytes_1, byte[] imageBytes_2, FaceType face_type) {
+	public JSONObject match(byte[] imageBytes_1, byte[] imageBytes_2, FaceType face_type) {
 		return match(imageBytes_1, imageBytes_2, face_type, FaceQuality.LOW);
 	}
 	
-	public String match(byte[] imageBytes_1, byte[] imageBytes_2, FaceType face_type, FaceQuality quality) {
+	public JSONObject match(byte[] imageBytes_1, byte[] imageBytes_2, FaceType face_type, FaceQuality quality) {
 		return match(imageBytes_1, imageBytes_2, face_type, quality, FaceLiveness.NORMAL);
 	}
 	
@@ -248,21 +248,21 @@ public class FaceRecognitionV3Template {
 	 *                         较高的活体要求(高攻击拒绝率 低通过率) 默认NONE
 	 * @return
 	 */
-	public String match(byte[] imageBytes_1, byte[] imageBytes_2, FaceType face_type, FaceQuality quality, FaceLiveness liveness) {
+	public JSONObject match(byte[] imageBytes_1, byte[] imageBytes_2, FaceType face_type, FaceQuality quality, FaceLiveness liveness) {
 		String imageBase64_1 = Base64Util.encode(imageBytes_1);
 		String imageBase64_2 = Base64Util.encode(imageBytes_2);
 		return match(imageBase64_1, imageBase64_2, face_type, quality, liveness);
 	}
 
-	public String match(String imageBase64_1, String imageBase64_2) {
+	public JSONObject match(String imageBase64_1, String imageBase64_2) {
 		return match(imageBase64_1, imageBase64_2, FaceType.LIVE);
 	}
 	
-	public String match(String imageBase64_1, String imageBase64_2, FaceType face_type) {
+	public JSONObject match(String imageBase64_1, String imageBase64_2, FaceType face_type) {
 		return match(imageBase64_1, imageBase64_2, face_type, FaceQuality.LOW);
 	}
 	
-	public String match(String imageBase64_1, String imageBase64_2, FaceType face_type, FaceQuality quality) {
+	public JSONObject match(String imageBase64_1, String imageBase64_2, FaceType face_type, FaceQuality quality) {
 		return match(imageBase64_1, imageBase64_2, face_type, quality,  FaceLiveness.NORMAL);
 	}
 	
@@ -287,7 +287,7 @@ public class FaceRecognitionV3Template {
 	 * @author ： <a href="https://github.com/vindell">wandl</a>
 	 * @return
 	 */
-	public String match(String imageBase64_1, String imageBase64_2, FaceType face_type, FaceQuality quality, FaceLiveness liveness) {
+	public JSONObject match(String imageBase64_1, String imageBase64_2, FaceType face_type, FaceQuality quality, FaceLiveness liveness) {
 		try {
 
 			List<Map<String, Object>> images = new ArrayList<>();
@@ -315,36 +315,36 @@ public class FaceRecognitionV3Template {
 			String accessToken = getAccessToken(properties.getClientId(), properties.getClientSecret());
 
 			String result = HttpUtil.post(FACE_MATCH_URL, accessToken, CONTENT_TYPE, param);
-			System.out.println(result);
-			return result;
+			
+			return JSONObject.parseObject(result);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return null;
 	}
 	
-	public String search(byte[] imageBytes, String group_id_list) {
+	public JSONObject search(byte[] imageBytes, String group_id_list) {
 		String imageBase64 = Base64Util.encode(imageBytes);
 		return search(imageBase64, group_id_list, FaceQuality.LOW);
 	}
 	
-	public String search(byte[] imageBytes, String group_id_list, FaceQuality quality) {
+	public JSONObject search(byte[] imageBytes, String group_id_list, FaceQuality quality) {
 		String imageBase64 = Base64Util.encode(imageBytes);
 		return search(imageBase64, group_id_list, quality, FaceLiveness.NORMAL);
 	}
 	
-	public String search(String imageBase64, String group_id_list) {
+	public JSONObject search(String imageBase64, String group_id_list) {
 		return search(imageBase64, group_id_list, FaceQuality.LOW);
 	}
 	
-	public String search(String imageBase64, String group_id_list, FaceQuality quality) {
+	public JSONObject search(String imageBase64, String group_id_list, FaceQuality quality) {
 		return search(imageBase64, group_id_list, quality, FaceLiveness.NORMAL);
 	}
 	
 	/**
 	 * 人脸搜索 : https://ai.baidu.com/docs#/Face-Search-V3/top
 	 */
-	public String search(String imageBase64, String group_id_list, FaceQuality quality, FaceLiveness liveness) {
+	public JSONObject search(String imageBase64, String group_id_list, FaceQuality quality, FaceLiveness liveness) {
 		try {
 			Map<String, Object> map = new HashMap<>();
 			// 图片信息(总数据大小应小于10M)，图片上传方式根据image_type来判断
@@ -361,8 +361,8 @@ public class FaceRecognitionV3Template {
 			String accessToken = getAccessToken(properties.getClientId(), properties.getClientSecret());
 
 			String result = HttpUtil.post(FACE_SEARCH_URL, accessToken, CONTENT_TYPE, param);
-			System.out.println(result);
-			return result;
+			
+			return JSONObject.parseObject(result);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -388,7 +388,7 @@ public class FaceRecognitionV3Template {
 	 *                         较高的活体要求(高攻击拒绝率 低通过率)； 默认NONE
 	 * @return
 	 */
-	public String faceNew(String imageBase64, String group_id, String user_id, String user_info, FaceQuality quality, FaceLiveness liveness) {
+	public JSONObject faceNew(String imageBase64, String group_id, String user_id, String user_info, FaceQuality quality, FaceLiveness liveness) {
 		 try {
 			 
             Map<String, Object> map = new HashMap<>();
@@ -413,8 +413,8 @@ public class FaceRecognitionV3Template {
             String accessToken = getAccessToken(properties.getClientId(), properties.getClientSecret());
 
             String result = HttpUtil.post(FACESET_USER_ADD_URL, accessToken, CONTENT_TYPE, param);
-            System.out.println(result);
-            return result;
+            
+            return JSONObject.parseObject(result);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -439,7 +439,7 @@ public class FaceRecognitionV3Template {
 	 *                         较高的活体要求(高攻击拒绝率 低通过率)； 默认NONE
 	 * @return
 	 */
-	public String faceRenew(String imageBase64, String group_id, String user_id, String user_info, FaceQuality quality, FaceLiveness liveness) {
+	public JSONObject faceRenew(String imageBase64, String group_id, String user_id, String user_info, FaceQuality quality, FaceLiveness liveness) {
 		 try {
 			 
             Map<String, Object> map = new HashMap<>();
@@ -464,8 +464,8 @@ public class FaceRecognitionV3Template {
             String accessToken = getAccessToken(properties.getClientId(), properties.getClientSecret());
 
             String result = HttpUtil.post(FACESET_USER_UPDATE_URL, accessToken, CONTENT_TYPE, param);
-            System.out.println(result);
-            return result;
+            
+            return JSONObject.parseObject(result);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -482,7 +482,7 @@ public class FaceRecognitionV3Template {
 	 * @param face_token       需要删除的人脸图片token，（由数字、字母、下划线组成）长度限制64B
 	 * @return
 	 */
-	public String faceDelete( String group_id, String user_id, String face_token) {
+	public JSONObject faceDelete( String group_id, String user_id, String face_token) {
 		 try {
 			 
             Map<String, Object> map = new HashMap<>();
@@ -496,8 +496,8 @@ public class FaceRecognitionV3Template {
             String accessToken = getAccessToken(properties.getClientId(), properties.getClientSecret());
 
             String result = HttpUtil.post(FACESET_FACE_DELETE_URL, accessToken, CONTENT_TYPE, param);
-            System.out.println(result);
-            return result;
+            
+            return JSONObject.parseObject(result);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -512,7 +512,7 @@ public class FaceRecognitionV3Template {
 	 * @param user_id          用户id（由数字、字母、下划线组成），长度限制128B
 	 * @return
 	 */
-	public String faceInfo( String group_id, String user_id) {
+	public JSONObject faceInfo( String group_id, String user_id) {
 		 try {
 			 
             Map<String, Object> map = new HashMap<>();
@@ -525,8 +525,8 @@ public class FaceRecognitionV3Template {
             String accessToken = getAccessToken(properties.getClientId(), properties.getClientSecret());
 
             String result = HttpUtil.post(FACESET_USER_GET_URL, accessToken, CONTENT_TYPE, param);
-            System.out.println(result);
-            return result;
+            
+            return JSONObject.parseObject(result);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -541,7 +541,7 @@ public class FaceRecognitionV3Template {
 	 * @param user_id          用户id（由数字、字母、下划线组成），长度限制128B
 	 * @return
 	 */
-	public String faceList( String group_id, String user_id) {
+	public JSONObject faceList( String group_id, String user_id) {
 		 try {
 			 
             Map<String, Object> map = new HashMap<>();
@@ -554,8 +554,8 @@ public class FaceRecognitionV3Template {
             String accessToken = getAccessToken(properties.getClientId(), properties.getClientSecret());
 
             String result = HttpUtil.post(FACESET_USER_LIST_URL, accessToken, CONTENT_TYPE, param);
-            System.out.println(result);
-            return result;
+            
+            return JSONObject.parseObject(result);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -571,7 +571,7 @@ public class FaceRecognitionV3Template {
 	 * @param length          	返回数量，默认值100，最大值1000
 	 * @return
 	 */
-	public String faceUsers( String group_id, int start, int length) {
+	public JSONObject faceUsers( String group_id, int start, int length) {
 		 try {
 			 
             Map<String, Object> map = new HashMap<>();
@@ -585,8 +585,8 @@ public class FaceRecognitionV3Template {
             String accessToken = getAccessToken(properties.getClientId(), properties.getClientSecret());
 
             String result = HttpUtil.post(FACESET_GROUP_USERS_URL, accessToken, CONTENT_TYPE, param);
-            System.out.println(result);
-            return result;
+            
+            return JSONObject.parseObject(result);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -602,7 +602,7 @@ public class FaceRecognitionV3Template {
 	 * @param target_group_id  需要添加信息的组id，多个的话用逗号分隔
 	 * @return
 	 */
-	public String userCopy( String group_id, String user_id, String target_group_id) {
+	public JSONObject userCopy( String group_id, String user_id, String target_group_id) {
 		 try {
 			 
             Map<String, Object> map = new HashMap<>();
@@ -616,8 +616,8 @@ public class FaceRecognitionV3Template {
             String accessToken = getAccessToken(properties.getClientId(), properties.getClientSecret());
 
             String result = HttpUtil.post(FACESET_USER_COPY_URL, accessToken, CONTENT_TYPE, param);
-            System.out.println(result);
-            return result;
+            
+            return JSONObject.parseObject(result);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -632,7 +632,7 @@ public class FaceRecognitionV3Template {
 	 * @param user_id          用户id（由数字、字母、下划线组成），长度限制128B
 	 * @return
 	 */
-	public String userDelete( String group_id, String user_id) {
+	public JSONObject userDelete( String group_id, String user_id) {
 		 try {
 			 
             Map<String, Object> map = new HashMap<>();
@@ -645,8 +645,8 @@ public class FaceRecognitionV3Template {
             String accessToken = getAccessToken(properties.getClientId(), properties.getClientSecret());
 
             String result = HttpUtil.post(FACESET_USER_DELETE_URL, accessToken, CONTENT_TYPE, param);
-            System.out.println(result);
-            return result;
+            
+            return JSONObject.parseObject(result);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -660,7 +660,7 @@ public class FaceRecognitionV3Template {
 	 * @param group_id         用户组id，标识一组用户（由数字、字母、下划线组成），长度限制48B。
 	 * @return
 	 */
-	public String groupNew( String group_id) {
+	public JSONObject groupNew( String group_id) {
 		 try {
 			 
             Map<String, Object> map = new HashMap<>();
@@ -672,8 +672,8 @@ public class FaceRecognitionV3Template {
             String accessToken = getAccessToken(properties.getClientId(), properties.getClientSecret());
 
             String result = HttpUtil.post(FACESET_GROUP_ADD_URL, accessToken, CONTENT_TYPE, param);
-            System.out.println(result);
-            return result;
+            
+            return JSONObject.parseObject(result);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -687,7 +687,7 @@ public class FaceRecognitionV3Template {
 	 * @param group_id         用户组id，标识一组用户（由数字、字母、下划线组成），长度限制48B。
 	 * @return
 	 */
-	public String groupDelete( String group_id) {
+	public JSONObject groupDelete( String group_id) {
 		 try {
 			 
             Map<String, Object> map = new HashMap<>();
@@ -699,8 +699,8 @@ public class FaceRecognitionV3Template {
             String accessToken = getAccessToken(properties.getClientId(), properties.getClientSecret());
 
             String result = HttpUtil.post(FACESET_GROUP_DELETE_URL, accessToken, CONTENT_TYPE, param);
-            System.out.println(result);
-            return result;
+            
+            return JSONObject.parseObject(result);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -715,7 +715,7 @@ public class FaceRecognitionV3Template {
 	 * @param length          回数量，默认值100，最大值1000
 	 * @return
 	 */
-	public String groupList(int start, int length) {
+	public JSONObject groupList(int start, int length) {
 		 try {
 			 
             Map<String, Object> map = new HashMap<>();
@@ -728,8 +728,8 @@ public class FaceRecognitionV3Template {
             String accessToken = getAccessToken(properties.getClientId(), properties.getClientSecret());
 
             String result = HttpUtil.post(FACESET_GROUP_LIST_URL, accessToken, CONTENT_TYPE, param);
-            System.out.println(result);
-            return result;
+            
+            return JSONObject.parseObject(result);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -737,21 +737,21 @@ public class FaceRecognitionV3Template {
 	}
 	
 	
-	public String personverify(byte[] imageBytes, String id_card_number, String name) {
+	public JSONObject personverify(byte[] imageBytes, String id_card_number, String name) {
 		String imageBase64 = Base64Util.encode(imageBytes);
 		return personverify(imageBase64, id_card_number, name, FaceQuality.LOW);
 	}
 	
-	public String personverify(byte[] imageBytes, String id_card_number, String name, FaceQuality quality) {
+	public JSONObject personverify(byte[] imageBytes, String id_card_number, String name, FaceQuality quality) {
 		String imageBase64 = Base64Util.encode(imageBytes);
 		return personverify(imageBase64, id_card_number, name, quality, FaceLiveness.HIGH);
 	}
 	
-	public String personverify(String imageBase64, String id_card_number, String name) {
+	public JSONObject personverify(String imageBase64, String id_card_number, String name) {
 		return personverify(imageBase64, id_card_number, name, FaceQuality.LOW);
 	}
 	
-	public String personverify(String imageBase64, String id_card_number, String name, FaceQuality quality) {
+	public JSONObject personverify(String imageBase64, String id_card_number, String name, FaceQuality quality) {
 		return personverify(imageBase64, id_card_number, name, quality, FaceLiveness.HIGH);
 	}
 	
@@ -768,7 +768,7 @@ public class FaceRecognitionV3Template {
 	 *                         较高的活体要求(高攻击拒绝率 低通过率) 默认NONE
 	 * @return
 	 */
-	public String personverify(String imageBase64, String id_card_number, String name, FaceQuality quality, FaceLiveness liveness) {
+	public JSONObject personverify(String imageBase64, String id_card_number, String name, FaceQuality quality, FaceLiveness liveness) {
         try {
         	
             Map<String, Object> map = new HashMap<>();
@@ -786,15 +786,15 @@ public class FaceRecognitionV3Template {
             String accessToken = getAccessToken(properties.getClientId(), properties.getClientSecret());
 
             String result = HttpUtil.post(FACE_PERSON_VERIFY_URL, accessToken, CONTENT_TYPE, param);
-            System.out.println(result);
-            return result;
+            
+            return JSONObject.parseObject(result);
         } catch (Exception e) {
             e.printStackTrace();
         }
         return null;
     }
 	
-	public String faceVerify(byte[] imageBytes, FaceOption option) {
+	public JSONObject faceVerify(byte[] imageBytes, FaceOption option) {
 		String imageBase64 = Base64Util.encode(imageBytes);
 		return faceVerify(imageBase64, option);
 	}
@@ -806,7 +806,7 @@ public class FaceRecognitionV3Template {
 	 * @param option      场景信息，程序会视不同的场景选用相对应的模型。当前支持的场景有COMMON(通用场景)，GATE(闸机场景)，默认使用COMMON
 	 * @return
 	 */
-	public String faceVerify(String imageBase64, FaceOption option) {
+	public JSONObject faceVerify(String imageBase64, FaceOption option) {
        
         try {
 
@@ -822,15 +822,15 @@ public class FaceRecognitionV3Template {
          	String accessToken = getAccessToken(properties.getClientId(), properties.getClientSecret());
 
             String result = HttpUtil.post(FACE_LIVENESS_VERIFY_URL, accessToken, CONTENT_TYPE, param);
-            System.out.println(result);
-            return result;
+            
+            return JSONObject.parseObject(result);
         } catch (Exception e) {
             e.printStackTrace();
         }
         return null;
     }
 	
-	public String merge(byte[] templateBytes, byte[] targetBytes) {
+	public JSONObject merge(byte[] templateBytes, byte[] targetBytes) {
 		String templateBase64 = Base64Util.encode(templateBytes);
 		String targetBase64 = Base64Util.encode(targetBytes);
 		return merge(templateBase64, targetBase64);
@@ -840,7 +840,7 @@ public class FaceRecognitionV3Template {
 	 * 人脸融合 
 	 * https://ai.baidu.com/docs#/Face-Merge/top
 	 */
-	public String merge(String templateBase64, String targetBase64) {
+	public JSONObject merge(String templateBase64, String targetBase64) {
 		try {
 			
 			Map<String, Object> map = new HashMap<>();
@@ -862,8 +862,8 @@ public class FaceRecognitionV3Template {
 			String accessToken = getAccessToken(properties.getClientId(), properties.getClientSecret());
 
 			String result = HttpUtil.post(FACE_MERGE_URL, accessToken, CONTENT_TYPE, param);
-			System.out.println(result);
-			return result;
+			
+			return JSONObject.parseObject(result);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
