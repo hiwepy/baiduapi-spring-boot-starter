@@ -549,5 +549,9 @@ public class FaceRecognitionV2Template {
         }
         return null;
     }
+	
+	public FaceRecognitionV2Properties getProperties() {
+		return properties;
+	}
 
 }

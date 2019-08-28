@@ -869,5 +869,9 @@ public class FaceRecognitionV3Template {
 		}
 		return null;
 	}
+	
+	public FaceRecognitionV3Properties getProperties() {
+		return properties;
+	}
 
 }
