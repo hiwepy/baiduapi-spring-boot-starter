@@ -4,7 +4,7 @@
 #### 组件简介
 
 > 基于 [百度智能云 - 人脸识别](https://cloud.baidu.com/product/face) 在线API实现的人脸识别整合
-
+> 离线SDK参考 ：http://ai.baidu.com/tech/face/offline-sdk
 
 #### 使用说明
 
