@@ -203,8 +203,10 @@ public class FaceRecognitionV3Template {
 			map.put("face_type", face_type.name());
 			
 			// 最多处理人脸的数目，默认值为1，仅检测图片中面积最大的那个人脸；最大值10，检测图片中面积最大的几张人脸。
-			map.put("max_face_num", "1");
-
+			map.put("max_face_num", properties.getMaxFaceNum());
+			// 活体控制 检测结果中不符合要求的人脸会被过滤
+			map.put("liveness_control", liveness.name());
+			
 			String param = JSONObject.toJSONString(map);
 
 			// 注意：access_token的有效期为30天，切记需要每30天进行定期更换，或者每次请求都拉取新token；
