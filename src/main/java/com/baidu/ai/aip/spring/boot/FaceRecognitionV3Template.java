@@ -85,9 +85,7 @@ public class FaceRecognitionV3Template {
 		}
 		if(StringUtils.equalsIgnoreCase(error_code, "223120")) {
 			result.put("liveness", 0);
-		} else {
-			result.put("liveness", 1);
-		}
+		} 
 		return result;
 	}
 	
