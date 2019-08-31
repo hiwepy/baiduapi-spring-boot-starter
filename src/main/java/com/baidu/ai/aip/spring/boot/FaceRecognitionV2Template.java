@@ -63,11 +63,17 @@ public class FaceRecognitionV2Template {
 	}
 	
 	protected JSONObject wrap(JSONObject result) {
+		String error_code = result.getString("error_code");
 		// 添加中文提示
-		if(!StringUtils.equalsIgnoreCase(result.getString("error_code"), "0")) {
+		if(!StringUtils.equalsIgnoreCase(error_code, "0")) {
 			// 获取异常信息
-			String error_msg = messages.getMessage(result.getString("error_code"));
+			String error_msg = messages.getMessage(error_code);
 			result.put("error_msg", error_msg);
+		}
+		if(StringUtils.equalsIgnoreCase(error_code, "223120")) {
+			result.put("liveness", 0);
+		} else {
+			result.put("liveness", 1);
 		}
 		return result;
 	}
