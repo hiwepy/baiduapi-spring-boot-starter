@@ -19,6 +19,9 @@ import java.net.URLEncoder;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.context.support.MessageSourceAccessor;
+
 import com.alibaba.fastjson.JSONObject;
 import com.baidu.ai.aip.utils.HttpUtil;
 import com.baidu.aip.util.Base64Util;
@@ -52,12 +55,22 @@ public class FaceRecognitionV2Template {
 	public static final String FACESET_GROUP_ADDUSER_URL = "https://aip.baidubce.com/rest/2.0/face/v2/faceset/group/adduser";
 	public static final String FACESET_GROUP_DELETEUSER_URL = "https://aip.baidubce.com/rest/2.0/face/v2/faceset/group/deleteuser";
 	
+	private MessageSourceAccessor messages = FaceRecognitionMessageSource.getAccessor();
 	private FaceRecognitionV2Properties properties;
 	
 	public FaceRecognitionV2Template(FaceRecognitionV2Properties properties) {
 		this.properties = properties;
 	}
 	
+	protected JSONObject wrap(JSONObject result) {
+		// 添加中文提示
+		if(!StringUtils.equalsIgnoreCase(result.getString("error_code"), "0")) {
+			// 获取异常信息
+			String error_msg = messages.getMessage(result.getString("error_code"));
+			result.put("error_msg", error_msg);
+		}
+		return result;
+	}
 	
 	/**
 	 * 注意：access_token的有效期为30天，切记需要每30天进行定期更换，或者每次请求都拉取新token；
@@ -151,7 +164,7 @@ public class FaceRecognitionV2Template {
 
 			String result = HttpUtil.post(FACE_DETECT_URL, accessToken, param);
 			
-			return JSONObject.parseObject(result);
+			return wrap(JSONObject.parseObject(result));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -229,7 +242,7 @@ public class FaceRecognitionV2Template {
 
             String result = HttpUtil.post(FACE_MATCH_URL, accessToken, param);
             
-            return JSONObject.parseObject(result);
+            return wrap(JSONObject.parseObject(result));
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -271,7 +284,7 @@ public class FaceRecognitionV2Template {
 
             String result = HttpUtil.post(FACE_SEARCH_URL, accessToken, param);
             
-            return JSONObject.parseObject(result);
+            return wrap(JSONObject.parseObject(result));
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -303,7 +316,7 @@ public class FaceRecognitionV2Template {
 
             String result = HttpUtil.post(FACESET_USER_ADD_URL, accessToken, param);
             
-            return JSONObject.parseObject(result);
+            return wrap(JSONObject.parseObject(result));
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -333,7 +346,7 @@ public class FaceRecognitionV2Template {
 
             String result = HttpUtil.post(FACESET_USER_UPDATE_URL, accessToken, param);
             
-            return JSONObject.parseObject(result);
+            return wrap(JSONObject.parseObject(result));
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -359,7 +372,7 @@ public class FaceRecognitionV2Template {
 
             String result = HttpUtil.post(FACESET_USER_DELETE_URL, accessToken, param);
             
-            return JSONObject.parseObject(result);
+            return wrap(JSONObject.parseObject(result));
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -384,7 +397,7 @@ public class FaceRecognitionV2Template {
 
             String result = HttpUtil.post(FACESET_USER_GET_URL, accessToken, param);
             
-            return JSONObject.parseObject(result);
+            return wrap(JSONObject.parseObject(result));
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -411,7 +424,7 @@ public class FaceRecognitionV2Template {
 
             String result = HttpUtil.post(FACESET_USER_GET_USERS_URL, accessToken, param);
             
-            return JSONObject.parseObject(result);
+            return wrap(JSONObject.parseObject(result));
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -436,7 +449,7 @@ public class FaceRecognitionV2Template {
 
             String result = HttpUtil.post(FACESET_GROUP_GET_LIST_URL, accessToken, param);
             
-            return JSONObject.parseObject(result);
+            return wrap(JSONObject.parseObject(result));
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -463,7 +476,7 @@ public class FaceRecognitionV2Template {
 
             String result = HttpUtil.post(FACESET_GROUP_ADDUSER_URL, accessToken, param);
             
-            return JSONObject.parseObject(result);
+            return wrap(JSONObject.parseObject(result));
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -488,7 +501,7 @@ public class FaceRecognitionV2Template {
 
             String result = HttpUtil.post(FACESET_GROUP_DELETEUSER_URL, accessToken, param);
             
-            return JSONObject.parseObject(result);
+            return wrap(JSONObject.parseObject(result));
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -518,7 +531,7 @@ public class FaceRecognitionV2Template {
         	String result = HttpUtil.post(FACE_PERSON_VERIFY_URL, accessToken, param);
         	
          
-            return JSONObject.parseObject(result);
+            return wrap(JSONObject.parseObject(result));
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -543,7 +556,7 @@ public class FaceRecognitionV2Template {
 
             String result = HttpUtil.post(FACE_LIVENESS_VERIFY_URL, accessToken, param);
             
-            return JSONObject.parseObject(result);
+            return wrap(JSONObject.parseObject(result));
         } catch (Exception e) {
             e.printStackTrace();
         }
