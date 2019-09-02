@@ -69,6 +69,8 @@ public class FaceRecognitionV2Template {
 			// 获取异常信息
 			String error_msg = messages.getMessage(error_code);
 			result.put("error_msg", error_msg);
+		} else {
+			result.put("error_code", 0);
 		}
 		if(StringUtils.equalsIgnoreCase(error_code, "223120")) {
 			result.put("liveness", 0);
