@@ -373,7 +373,7 @@
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-		<baiduapi.version>4.11.1</baiduapi.version>
+		<baidu-api.version>4.11.1</baidu-api.version>
 		<guava.version>27.0.1-jre</guava.version>
 		<fastjson.version>1.2.58</fastjson.version>
 				
@@ -457,7 +457,7 @@
 		<dependency>
 			<groupId>com.baidu.aip</groupId>
 			<artifactId>java-sdk</artifactId>
-			<version>${baiduapi.version}</version>
+			<version>${baidu-api.version}</version>
 		</dependency>
 
 	</dependencies>
