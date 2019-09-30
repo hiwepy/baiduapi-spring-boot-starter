@@ -375,7 +375,7 @@
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<baidu-api.version>4.11.1</baidu-api.version>
 		<guava.version>27.0.1-jre</guava.version>
-		<fastjson.version>1.2.58</fastjson.version>
+		<fastjson.version>1.2.61</fastjson.version>
 				
 		<maven.version>3.0</maven.version>
        	<maven-gpg-plugin.version>1.6</maven-gpg-plugin.version>
