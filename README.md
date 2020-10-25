@@ -8,11 +8,17 @@
 
 #### 使用说明
 
-##### 1、Spring Boot 项目添加 Maven 依赖
+##### 1、发布百度SDK到自己的 Maven私服（`请下载新版本`）
+
+```shell
+mvn deploy:deploy-file -DgroupId=com.baidu.aip -DartifactId=java-sdk -Dversion=4.11.1 -Dpackaging=jar -Dfile=D:\aip-java-sdk-4.11.1.jar -Durl=http://127.0.0.1:8082/nexus/content/repositories/releases/ -DrepositoryId=nexus-releases
+```
+
+##### 2、Spring Boot 项目添加 Maven 依赖
 
 ``` xml
 <dependency>
-	<groupId>${project.groupId}</groupId>
+	<groupId>com.github.hiwepy</groupId>
 	<artifactId>baiduapi-spring-boot-starter</artifactId>
 	<version>${project.version}</version>
 </dependency>
@@ -201,3 +207,13 @@ public class BaiduFaceRecognitionProvider implements FaceRecognitionProvider {
 	}
 }
 ```
+
+## Jeebiz 技术社区
+
+Jeebiz 技术社区 **微信用户群**，欢迎反馈意见和公众号大佬们一起交流，关注公众号回复「Jeebiz」拉你入群。
+
+同时也欢迎打赏哟，您的支持是我们最大的动力！
+
+|公共号|小程序|
+|---|---|
+|<img width="250px" src="/uploads/jeebiz-starters/images/m_1008c72451fffbd7ef1b13a1025fd595_r.jpg"/>|<img width="250px" src="/uploads/jeebiz-starters/images/m_84ed341cdee3263fcc39bc23834034d1_r.jpg"/>|
