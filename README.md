@@ -23,7 +23,7 @@ mvn deploy:deploy-file -DgroupId=com.baidu.aip -DartifactId=java-sdk -Dversion=4
 </dependency>
 ```
 
-##### 2、在`application.yml`文件中增加如下配置
+##### 3、在`application.yml`文件中增加如下配置
 
 ```yaml
 #################################################################################################
