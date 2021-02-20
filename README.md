@@ -19,7 +19,7 @@ mvn deploy:deploy-file -DgroupId=com.baidu.aip -DartifactId=java-sdk -Dversion=4
 <dependency>
 	<groupId>com.github.hiwepy</groupId>
 	<artifactId>baiduapi-spring-boot-starter</artifactId>
-	<version>${project.version}</version>
+	<version>1.0.1.RELEASE</version>
 </dependency>
 ```
 
