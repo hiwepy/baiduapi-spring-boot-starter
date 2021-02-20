@@ -13,7 +13,7 @@
 	<groupId>com.github.hiwepy</groupId>
 	<artifactId>baiduapi-spring-boot-starter</artifactId>
 	<description>Spring Boot Starter For Baidu API</description>
-	<version>1.0.1-SNAPSHOT</version>
+	<version>1.0.1.RELEASE</version>
 	<name>${project.groupId}:${project.artifactId}</name>
 	<url>https://github.com/hiwepy/${project.artifactId}</url>
 	<packaging>jar</packaging>
@@ -364,10 +364,9 @@
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-		<baidu-api.version>4.11.1</baidu-api.version>
+		<baidu-api.version>4.15.3</baidu-api.version>
 		<guava.version>30.0-jre</guava.version>
 		<fastjson.version>1.2.75</fastjson.version>
-				
 		<maven.version>3.0</maven.version>
        	<maven-gpg-plugin.version>1.6</maven-gpg-plugin.version>
         <maven-jar-plugin.version>3.1.1</maven-jar-plugin.version>
