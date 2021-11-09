@@ -355,7 +355,7 @@
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-		<baidu-api.version>4.15.3</baidu-api.version>
+		<baidu-api.version>4.16.2</baidu-api.version>
 		<guava.version>30.0-jre</guava.version>
 		<fastjson.version>1.2.75</fastjson.version>
 		<maven.version>3.0</maven.version>
