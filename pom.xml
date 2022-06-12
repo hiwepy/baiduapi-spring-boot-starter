@@ -355,9 +355,9 @@
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-		<baidu-api.version>4.16.2</baidu-api.version>
-		<guava.version>30.0-jre</guava.version>
-		<fastjson.version>1.2.75</fastjson.version>
+		<baidu-api.version>4.16.8</baidu-api.version>
+		<guava.version>31.0.1-jre</guava.version>
+		<fastjson.version>2.0.7</fastjson.version>
 		<maven.version>3.0</maven.version>
        	<maven-gpg-plugin.version>1.6</maven-gpg-plugin.version>
         <maven-jar-plugin.version>3.1.1</maven-jar-plugin.version>
@@ -436,12 +436,12 @@
 		    <artifactId>fastjson</artifactId>
 		    <version>${fastjson.version}</version>
 		</dependency>
-
 		<dependency>
 			<groupId>org.apache.commons</groupId>
 			<artifactId>commons-lang3</artifactId>
 		</dependency>
 
+		<!-- https://mvnrepository.com/artifact/com.baidu.aip/java-sdk -->
 		<dependency>
 			<groupId>com.baidu.aip</groupId>
 			<artifactId>java-sdk</artifactId>
