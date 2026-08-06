@@ -1,216 +1,169 @@
+<a id="readme-top"></a>
+
+<div align="center">
+
 # baiduapi-spring-boot-starter
 
-#### 组件简介
+**Spring Boot Starter for baiduapi**
 
-> 基于 [百度智能云 - 人脸识别](https://cloud.baidu.com/product/face) 在线API实现的人脸识别整合
-> 离线SDK参考 ：http://ai.baidu.com/tech/face/offline-sdk
+[![Maven Central](https://img.shields.io/maven-central/v/io.github.easy4j/baiduapi-spring-boot-starter)](https://github.com/easy-4-java/baiduapi-spring-boot-starter)
+[![Java](https://img.shields.io/badge/Java-17-orange)](#3-requirements-and-compatibility)
+[![License](https://img.shields.io/badge/license-Apache-2.0-green)](https://www.apache.org/licenses/LICENSE-2.0)
 
-#### 使用说明
+[简体中文](./README.zh-CN.md) | [English](./README.md)
 
-##### 1、发布百度SDK到自己的 Maven私服（`请下载新版本`）
+[Positioning](#1-positioning) · [Capabilities](#2-core-capabilities) ·
+[Dependency](#5-dependency) · [Quick Start](#6-quick-start) ·
+[Configuration](#7-configuration-reference) · [Versions](#9-version-lines-and-compatibility) ·
+[Build](#10-build-and-test) · [License](#12-license)
 
-```shell
-mvn deploy:deploy-file -DgroupId=com.baidu.aip -DartifactId=java-sdk -Dversion=4.11.1 -Dpackaging=jar -Dfile=D:\aip-java-sdk-4.11.1.jar -Durl=http://127.0.0.1:8082/nexus/content/repositories/releases/ -DrepositoryId=nexus-releases
-```
+</div>
 
-##### 2、Spring Boot 项目添加 Maven 依赖
+---
 
-``` xml
+> **Current Version**：`3.2.x.20260527-SNAPSHOT`<br>
+> **JDK Baseline**：`17`<br>
+> **Group ID**：`io.github.easy4j`<br>
+> **Artifact ID**：`baiduapi-spring-boot-starter`<br>
+> **License**：Apache License 2.0<br>
+
+## 1. Positioning
+
+**baiduapi-spring-boot-starter** is a Spring Boot starter that integrates **baiduapi** for applications using baiduapi. It provides auto-configuration, property binding, and ready-to-use beans so that applications can consume baiduapi capabilities with minimal setup.
+
+| Dimension | Description |
+|---|---|
+| Type | Spring Boot Starter |
+| Consumers | Spring Boot applications using baiduapi |
+| Core Capabilities | auto-configuration, property binding, ready-to-use beans for baiduapi |
+| JDK | `17` |
+| Coordinates | `io.github.easy4j:baiduapi-spring-boot-starter:3.2.x.20260527-SNAPSHOT` |
+| Config Prefix | `baiduapi` |
+
+## 2. Core Capabilities
+
+| Capability | Status | Description |
+|---|:---:|---|
+| Auto-configuration | ✅ Stable | Registers baiduapi beans automatically |
+| Property Binding | ✅ Stable | Binds `baiduapi.*` to `FaceRecognitionV2Properties` |
+| `FaceRecognitionV2Template` bean | ✅ Stable | Auto-registered via FaceRecognitionV2AutoConfiguration, FaceRecognitionV3AutoConfiguration |
+
+## 3. Requirements and Compatibility
+
+| Dependency | Minimum | Evidence |
+|---|---:|---|
+| JDK | `17` | `pom.xml` |
+| Spring Boot | `3.2.12` | `pom.xml` parent |
+| Maven | `3.6+` | Maven Enforcer |
+
+## 4. Auto-configuration
+
+The starter auto-configures the following beans:
+
+| Bean | Condition | Missing Behavior |
+|---|---|---|
+| `FaceRecognitionV2Template` | classpath + property | not created |
+| `FaceRecognitionV3Template` | classpath + property | not created |
+
+Auto-configuration registration:
+
+- `META-INF/spring/org.springframework.boot.autoconfigure.AutoConfiguration.imports` (Spring Boot 2.7+ / 3.x / 4.x)
+- `META-INF/spring.factories` (Spring Boot 2.x legacy)
+
+## 5. Dependency
+
+```xml
 <dependency>
-	<groupId>com.github.hiwepy</groupId>
-	<artifactId>baiduapi-spring-boot-starter</artifactId>
-	<version>${project.version}</version>
+    <groupId>io.github.easy4j</groupId>
+    <artifactId>baiduapi-spring-boot-starter</artifactId>
+    <version>3.2.x.20260527-SNAPSHOT</version>
 </dependency>
 ```
 
-##### 3、在`application.yml`文件中增加如下配置
+No additional easy4j component dependencies.
+
+## 6. Quick Start
+
+### 6.1 Add dependency
+
+Add the dependency above to your `pom.xml`.
+
+### 6.2 Configure
 
 ```yaml
-#################################################################################################
-### 百度人脸识别 配置：
-#################################################################################################
-baidu:
-  face:
-    v3:
-      enabled: true
-      client-id: xxxx
-      client-secret: xxxx
+baiduapi:
+  enabled: true
 ```
 
-##### 3、使用示例
-
-配置对象 FaceRecognitionProperties
+### 6.3 Use the bean
 
 ```java
-import org.springframework.boot.context.properties.ConfigurationProperties;
-
-@ConfigurationProperties(FaceRecognitionProperties.PREFIX)
-public class FaceRecognitionProperties {
-
-	public static final String PREFIX = "face";
-
-	/**
-	 * 人脸识别服务提供者（local: 本地实现, baidu: 百度人脸识别服务）
-	 */
-	private String provider = "local";
-	/**
-	 * 人脸识别数据分组（以学校代码为分组）
-	 */
-	private String group = "14535";
-
-	public String getProvider() {
-		return provider;
-	}
-
-	public void setProvider(String provider) {
-		this.provider = provider;
-	}
-
-	public String getGroup() {
-		return group;
-	}
-
-	public void setGroup(String group) {
-		this.group = group;
-	}
-
+@SpringBootApplication
+public class Application {
+    public static void main(String[] args) {
+        SpringApplication.run(Application.class, args);
+    }
 }
 ```
 
-本地使用示接口（为了方便多种识别方案对接，这里采用了提供者模式进行开发）
+Then inject the auto-configured bean in your code:
 
 ```java
-import org.springframework.web.multipart.MultipartFile;
-
-import com.alibaba.fastjson.JSONObject;
-
-public interface FaceRecognitionProvider {
-
-	/**
-	 * Provider Name
-	 * @return
-	 */
-	String getName();
-	/**
-	 * 人脸检测与属性分析：
-	 * 1、人脸检测：检测图片中的人脸并标记出位置信息;
-	 * 2、人脸关键点：展示人脸的核心关键点信息，及150个关键点信息。
-	 * 3、人脸属性值：展示人脸属性信息，如年龄、性别等。
-	 * 4、人脸质量信息：返回人脸各部分的遮挡、光照、模糊、完整度、置信度等信息。
-	 * @param imageBase64 人脸图片文件
-	 * @return
-	 */
-	JSONObject detect(String imageBase64) throws Exception;
-	/**
-	 * 活体检测:
-	 * 1、人脸基础信息：包括人脸框位置，人脸空间旋转角度，人脸置信度等信息。
-	 * 2、 人脸质量检测：判断人脸的遮挡、光照、模糊度、完整度等质量信息。可用于判断上传的人脸是否符合标准。
-	 * 3、 基于图片的活体检测：基于单张图片，判断图片中的人脸是否为二次翻拍（举例：如用户A用手机拍摄了一张包含人脸的图片一，用户B翻拍了图片一得到了图片二，并用图片二伪造成用户A去进行识别操作，这种情况普遍发生在金融开户、实名认证等环节）。此能力可用于H5场景下的一些人脸采集场景中，增加人脸注册的安全性和真实性。
-	 * @param image 人脸图片文件
-	 * @return
-	 */
-	JSONObject verify(MultipartFile image) throws Exception;
-	/**
-	 * 人脸对比：
-	 * 1、两张人脸图片相似度对比：比对两张图片中人脸的相似度，并返回相似度分值；
-	 * 2、 多种图片类型：支持生活照、证件照、身份证芯片照、带网纹照四种类型的人脸对比；
-	 * 3、活体检测控制：基于图片中的破绽分析，判断其中的人脸是否为二次翻拍（举例：如用户A用手机拍摄了一张包含人脸的图片一，用户B翻拍了图片一得到了图片二，并用图片二伪造成用户A去进行识别操作，这种情况普遍发生在金融开户、实名认证等环节。）；
-	 * 4、质量检测控制：分析图片的中人脸的模糊度、角度、光照强度等特征，判断图片质量；
-	 * @param userId 用户ID
-	 * @param image 人脸图片文件
-	 * @return
-	 */
-	JSONObject match(String userId, MultipartFile image) throws Exception;
-	/**
-	 * 人脸搜索：
-	 * 1、人脸搜索：也称为1：N识别，在指定人脸集合中，找到最相似的人脸；
-	 * 2、人脸搜索 M：N识别：也称为M：N识别，待识别图片中含有多个人脸时，在指定人脸集合中，找到这多个人脸分别最相似的人脸
-	 * @param image 人脸图片文件
-	 * @return
-	 */
-	JSONObject search(MultipartFile image) throws Exception;
-	/**
-	 * 人脸融合：对两张人脸进行融合处理，生成的人脸同时具备两张人脸的外貌特征（并不是换脸）
-	 * 
-	 * 1、指定人脸：当图片中有多张人脸时，可以指定某一张人脸与模板图进行融合
-	 * 2、 图像融合：将检测到的两张人脸图片进行融合，输出一张融合后的人脸
-	 * 3、 黄反识别：利用图像识别能力，判断图片中是否存在色情、暴恐血腥场景、政治敏感人物
-	 * @param template 人脸融合模板图片文件
-	 * @param target 人脸融合人脸图片文件
-	 * @return
-	 */
-	JSONObject merge(MultipartFile template, MultipartFile target) throws Exception;
-}
+@Autowired
+private FaceRecognitionV2Template faceRecognitionV2Template;
 ```
 
-基于百度人脸识别接口实现：
+## 7. Configuration Reference
 
-```java
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-import org.springframework.web.multipart.MultipartFile;
+### 7.1 Config Prefix
 
-import com.alibaba.fastjson.JSONObject;
-import com.baidu.ai.aip.spring.boot.FaceOption;
-import com.baidu.ai.aip.spring.boot.FaceRecognitionV3Template;
-import com.baidu.aip.util.Base64Util;
+`baiduapi`
 
-@Component
-public class BaiduFaceRecognitionProvider implements FaceRecognitionProvider {
+### 7.2 Configuration Items
 
-	@Autowired
-	private FaceRecognitionV3Template faceRecognitionV3Template;
-	@Autowired
-	private FaceRecognitionProperties faceRecognitionProperties;
-	@Autowired
-	private IAuthzFaceDao authzFace;
+| Property | Type | Default | Required | Description | Sensitive |
+|---|---|---|:---:|---|:---:|
+| `baiduapi.enabled` | boolean | `true` | No | Enable the starter | No |
+<!-- additional properties below -->
 
-	@Override
-	public String getName() {
-		return "baidu";
-	}
+## 8. Version Lines and Compatibility
 
-	@Override
-	public JSONObject detect(String imageBase64) throws Exception {
-		return getFaceRecognitionV3Template().detect(imageBase64);
-	}
+| Branch | JDK | Spring Boot | Component Version | Status |
+|---|---:|---:|---|:---:|
+| `2.3.x` / `2.7.x` | `8+` | 2.3.x / 2.7.x | `1.0.x` | Maintenance |
+| `3.0.x` ~ `3.5.x` | `17` | 3.x | `2.0.x` | Maintenance |
+| `4.0.x` / `4.1.x` | `17+` | 4.x | `3.0.x` | Active |
 
-	@Override
-	public JSONObject verify(MultipartFile image) throws Exception {
-		// 对文件进行转码
-		String imageBase64 = Base64Util.encode(image.getBytes());
-		return getFaceRecognitionV3Template().faceVerify(imageBase64, FaceOption.COMMON);
-	}
+## 9. Build and Test
 
-	@Override
-	public JSONObject match(String userId, MultipartFile image) throws Exception {
-		AuthzFaceModel model = getAuthzFace().getModel(userId);
-		String imageBase64_2 = Base64Util.encode(image.getBytes());
-		return getFaceRecognitionV3Template().match(model.getFace(), imageBase64_2);
-	}
-
-	@Override
-	public JSONObject search(MultipartFile image) throws Exception {
-		// 对文件进行转码
-		String imageBase64 = Base64Util.encode(image.getBytes());
-		return getFaceRecognitionV3Template().search(imageBase64, faceRecognitionProperties.getGroup());
-	}
-
-	@Override
-	public JSONObject merge(MultipartFile template, MultipartFile target) throws Exception {
-		return getFaceRecognitionV3Template().merge(template.getBytes(), target.getBytes());
-	}
-
-	public FaceRecognitionV3Template getFaceRecognitionV3Template() {
-		return faceRecognitionV3Template;
-	}
-}
+```bash
+mvn clean verify
+mvn -pl baiduapi-spring-boot-starter -am test
 ```
 
-## Jeebiz 技术社区
+## 10. Troubleshooting
 
-Jeebiz 技术社区 **微信公共号**、**小程序**，欢迎关注反馈意见和一起交流，关注公众号回复「Jeebiz」拉你入群。
+| Symptom | Diagnosis | Resolution |
+|---|---|---|
+| Bean not created | Check auto-configuration report | Verify `baiduapi.enabled=true` and classpath |
+| `ClassNotFoundException` | Missing dependency | Add the required module |
+| Version conflict | `mvn dependency:tree` | Use BOM for version alignment |
 
-|公共号|小程序|
-|---|---|
-| ![](https://raw.githubusercontent.com/hiwepy/static/main/images/qrcode_for_gh_1d965ea2dfd1_344.jpg)| ![](https://raw.githubusercontent.com/hiwepy/static/main/images/gh_09d7d00da63e_344.jpg)|
+## 11. Contribution
+
+1. Fork the repository.
+2. Create a feature branch.
+3. Run `mvn clean verify` before submitting.
+4. Submit a pull request.
+
+## 12. License
+
+This project is licensed under the [Apache License, Version 2.0](https://www.apache.org/licenses/LICENSE-2.0).
+
+---
+
+<div align="center">
+
+[Back to top](#readme-top) · [Issues](https://github.com/easy-4-java/baiduapi-spring-boot-starter/issues) · [Repository](https://github.com/easy-4-java/baiduapi-spring-boot-starter)
+
+</div>
