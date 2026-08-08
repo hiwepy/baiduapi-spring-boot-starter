@@ -30,9 +30,30 @@ import static org.assertj.core.api.Assertions.assertThat;
 class FaceLivenessTest {
 
     @Test
-    @DisplayName("Instance can be created via constructor")
-    void testInstantiation() {
-        FaceLiveness instance = new FaceLiveness();
-        assertThat(instance).isNotNull();
+    @DisplayName("Should expose all expected liveness control constants")
+    void shouldExposeAllConstants() {
+        assertThat(FaceLiveness.values())
+            .containsExactly(FaceLiveness.NONE, FaceLiveness.LOW, FaceLiveness.NORMAL, FaceLiveness.HIGH);
     }
+
+    @Test
+    @DisplayName("Should resolve constant by name")
+    void shouldResolveByName() {
+        assertThat(FaceLiveness.valueOf("HIGH")).isEqualTo(FaceLiveness.HIGH);
+    }
+
+    @Test
+    @DisplayName("Should have four distinct constants")
+    void shouldHaveFourConstants() {
+        assertThat(FaceLiveness.values()).hasSize(4);
+    }
+
+    @Test
+    @DisplayName("Enum instances should be singletons")
+    void shouldBeSingletons() {
+        for (FaceLiveness value : FaceLiveness.values()) {
+            assertThat(value).isSameAs(FaceLiveness.valueOf(value.name()));
+        }
+    }
+
 }

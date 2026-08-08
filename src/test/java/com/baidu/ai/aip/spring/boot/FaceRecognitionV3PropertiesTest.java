@@ -30,112 +30,43 @@ import static org.assertj.core.api.Assertions.assertThat;
  */
 @DisplayName("FaceRecognitionV3Properties Tests")
 class FaceRecognitionV3PropertiesTest {
-    @Test
-    @DisplayName("Default constructor creates non-null instance")
-    void testDefaultInstance() {
-        FaceRecognitionV3Properties props = new FaceRecognitionV3Properties();
-        assertThat(props).isNotNull();
-    }
 
     @Test
-    @DisplayName("Field 'enabled' can be set and read")
-    void testEnabledField() {
-        FaceRecognitionV3Properties props = new FaceRecognitionV3Properties();
-        // Use reflection to set private field (covers all fields including those without setters)
-        try {
-            java.lang.reflect.Field f = FaceRecognitionV3Properties.class.getDeclaredField("enabled");
-            f.setAccessible(true);
-            f.set(props, true);
-            Object value = f.get(props);
-            assertThat(value).isNotNull();
-        } catch (Exception e) {
-            // Field may have a more complex type; skip silently
-        }
-    }
-
-    @Test
-    @DisplayName("Field 'clientId' can be set and read")
-    void testClientIdField() {
-        FaceRecognitionV3Properties props = new FaceRecognitionV3Properties();
-        // Use reflection to set private field (covers all fields including those without setters)
-        try {
-            java.lang.reflect.Field f = FaceRecognitionV3Properties.class.getDeclaredField("clientId");
-            f.setAccessible(true);
-            f.set(props, "test");
-            Object value = f.get(props);
-            assertThat(value).isNotNull();
-        } catch (Exception e) {
-            // Field may have a more complex type; skip silently
-        }
-    }
-
-    @Test
-    @DisplayName("Field 'clientSecret' can be set and read")
-    void testClientSecretField() {
-        FaceRecognitionV3Properties props = new FaceRecognitionV3Properties();
-        // Use reflection to set private field (covers all fields including those without setters)
-        try {
-            java.lang.reflect.Field f = FaceRecognitionV3Properties.class.getDeclaredField("clientSecret");
-            f.setAccessible(true);
-            f.set(props, "test");
-            Object value = f.get(props);
-            assertThat(value).isNotNull();
-        } catch (Exception e) {
-            // Field may have a more complex type; skip silently
-        }
-    }
-
-    @Test
-    @DisplayName("Field 'maxFaceNum' can be set and read")
-    void testMaxFaceNumField() {
-        FaceRecognitionV3Properties props = new FaceRecognitionV3Properties();
-        // Use reflection to set private field (covers all fields including those without setters)
-        try {
-            java.lang.reflect.Field f = FaceRecognitionV3Properties.class.getDeclaredField("maxFaceNum");
-            f.setAccessible(true);
-            f.set(props, 42);
-            Object value = f.get(props);
-            assertThat(value).isNotNull();
-        } catch (Exception e) {
-            // Field may have a more complex type; skip silently
-        }
-    }
-
-    @Test
-    @DisplayName("Field 'faceFields' can be set and read")
-    void testFaceFieldsField() {
-        FaceRecognitionV3Properties props = new FaceRecognitionV3Properties();
-        // Use reflection to set private field (covers all fields including those without setters)
-        try {
-            java.lang.reflect.Field f = FaceRecognitionV3Properties.class.getDeclaredField("faceFields");
-            f.setAccessible(true);
-            f.set(props, "test");
-            Object value = f.get(props);
-            assertThat(value).isNotNull();
-        } catch (Exception e) {
-            // Field may have a more complex type; skip silently
-        }
-    }
-
-    @Test
-    @DisplayName("Field 'maxUserNum' can be set and read")
-    void testMaxUserNumField() {
-        FaceRecognitionV3Properties props = new FaceRecognitionV3Properties();
-        // Use reflection to set private field (covers all fields including those without setters)
-        try {
-            java.lang.reflect.Field f = FaceRecognitionV3Properties.class.getDeclaredField("maxUserNum");
-            f.setAccessible(true);
-            f.set(props, 42);
-            Object value = f.get(props);
-            assertThat(value).isNotNull();
-        } catch (Exception e) {
-            // Field may have a more complex type; skip silently
-        }
-    }
-
-    @Test
-    @DisplayName("Public constant 'PREFIX' has expected value")
-    void testPREFIXConstant() {
+    @DisplayName("Should expose the expected PREFIX constant")
+    void prefixConstant() {
         assertThat(FaceRecognitionV3Properties.PREFIX).isEqualTo("baidu.face.v3");
     }
+
+    @Test
+    @DisplayName("Default values should match the documented defaults")
+    void defaults() {
+        FaceRecognitionV3Properties props = new FaceRecognitionV3Properties();
+        assertThat(props.isEnabled()).isFalse();
+        assertThat(props.getClientId()).isNull();
+        assertThat(props.getClientSecret()).isNull();
+        assertThat(props.getMaxFaceNum()).isEqualTo(1);
+        assertThat(props.getFaceFields()).isNotEmpty();
+        assertThat(props.getMaxUserNum()).isEqualTo(1);
+    }
+
+    @Test
+    @DisplayName("Getters and setters should round-trip every field")
+    void gettersAndSetters() {
+        FaceRecognitionV3Properties props = new FaceRecognitionV3Properties();
+
+        props.setEnabled(true);
+        props.setClientId("ak");
+        props.setClientSecret("sk");
+        props.setMaxFaceNum(8);
+        props.setFaceFields("age,gender");
+        props.setMaxUserNum(20);
+
+        assertThat(props.isEnabled()).isTrue();
+        assertThat(props.getClientId()).isEqualTo("ak");
+        assertThat(props.getClientSecret()).isEqualTo("sk");
+        assertThat(props.getMaxFaceNum()).isEqualTo(8);
+        assertThat(props.getFaceFields()).isEqualTo("age,gender");
+        assertThat(props.getMaxUserNum()).isEqualTo(20);
+    }
+
 }

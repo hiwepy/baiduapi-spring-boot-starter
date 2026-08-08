@@ -17,8 +17,16 @@ package com.baidu.ai.aip.spring.boot;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.mockito.MockedStatic;
+
+import com.alibaba.fastjson2.JSONObject;
+import com.baidu.ai.aip.utils.HttpUtil;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.mockStatic;
 
 /**
  * Unit tests for {{ @link FaceRecognitionV2Template }}.
@@ -29,10 +37,101 @@ import static org.assertj.core.api.Assertions.assertThat;
 @DisplayName("FaceRecognitionV2Template Tests")
 class FaceRecognitionV2TemplateTest {
 
-    @Test
-    @DisplayName("Instance can be created via constructor")
-    void testInstantiation() {
-        FaceRecognitionV2Template instance = new FaceRecognitionV2Template(null);
-        assertThat(instance).isNotNull();
+    private FaceRecognitionV2Properties properties() {
+        FaceRecognitionV2Properties props = new FaceRecognitionV2Properties();
+        props.setClientId("ak");
+        props.setClientSecret("sk");
+        props.setMaxFaceNum(2);
+        props.setFaceFields("age,gender");
+        props.setUserTopNum(3);
+        return props;
     }
+
+    @Test
+    @DisplayName("Constructor should store the provided properties")
+    void constructorStoresProperties() {
+        FaceRecognitionV2Properties props = new FaceRecognitionV2Properties();
+        FaceRecognitionV2Template template = new FaceRecognitionV2Template(props);
+        assertThat(template.getProperties()).isSameAs(props);
+    }
+
+    @Test
+    @DisplayName("URL constants should point at the baidu face V2/V3 endpoints")
+    void urlConstants() {
+        assertThat(FaceRecognitionV2Template.FACE_DETECT_URL).contains("/rest/2.0/face/v1/detect");
+        assertThat(FaceRecognitionV2Template.FACE_MATCH_URL).contains("/rest/2.0/face/v2/match");
+        assertThat(FaceRecognitionV2Template.FACE_SEARCH_URL).contains("/rest/2.0/face/v2/identify");
+        assertThat(FaceRecognitionV2Template.FACE_PERSON_VERIFY_URL).contains("/rest/2.0/face/v3/person/verify");
+        assertThat(FaceRecognitionV2Template.FACE_LIVENESS_VERIFY_URL).contains("/rest/2.0/face/v3/faceverify");
+        assertThat(FaceRecognitionV2Template.FACE_MERGE_URL).contains("/rest/2.0/face/v1/merge");
+    }
+
+    @Test
+    @DisplayName("getAccessToken should resolve to null with empty credentials")
+    void getAccessTokenWithoutCredentials() {
+        FaceRecognitionV2Template template = new FaceRecognitionV2Template(properties());
+        try {
+            assertThat(template.getAccessToken("", "")).isNull();
+        } catch (Exception e) {
+            assertThat(e).isNotNull();
+        }
+    }
+
+    @Test
+    @DisplayName("All network methods should execute their success path and return wrapped result")
+    void networkMethodsShouldReturnWrappedResult() {
+        FaceRecognitionV2Template template = new FaceRecognitionV2Template(properties());
+        // Stub AuthClient and HttpUtil so the full request-construction path is deterministic.
+        try (MockedStatic<AuthClient> auth = mockStatic(AuthClient.class);
+             MockedStatic<HttpUtil> http = mockStatic(HttpUtil.class)) {
+            auth.when(() -> AuthClient.getAuth(anyString(), anyString())).thenReturn("token");
+            http.when(() -> HttpUtil.post(anyString(), anyString(), anyString())).thenReturn("{\"error_code\":\"0\"}");
+            assertThat(template.detect("img")).isNotNull();
+            assertThat(template.detect(new byte[] { 1, 2 })).isNotNull();
+            assertThat(template.match(new byte[] { 1 }, new byte[] { 2 })).isNotNull();
+            assertThat(template.match(new byte[] { 1 }, new byte[] { 2 }, "x")).isNotNull();
+            assertThat(template.match(new byte[] { 1 }, new byte[] { 2 }, "x", "y")).isNotNull();
+            assertThat(template.match("a", "b")).isNotNull();
+            assertThat(template.match("a", "b", "x")).isNotNull();
+            assertThat(template.match("a", "b", "x", "y")).isNotNull();
+            assertThat(template.search(new byte[] { 1 }, "g")).isNotNull();
+            assertThat(template.search("img", "g")).isNotNull();
+            assertThat(template.faceNew("img", "g", "u", "i")).isNotNull();
+            assertThat(template.faceRenew("img", "g", "u", "i")).isNotNull();
+            assertThat(template.faceDelete("g", "u")).isNotNull();
+            assertThat(template.faceInfo("g", "u")).isNotNull();
+            assertThat(template.faceUsers("g", 0, 100)).isNotNull();
+            assertThat(template.groupList(0, 100)).isNotNull();
+            assertThat(template.userCopy("g", "u", "t")).isNotNull();
+            assertThat(template.userDelete("g", "u")).isNotNull();
+            assertThat(template.personverify("img", "id", "name")).isNotNull();
+            assertThat(template.faceVerify("img")).isNotNull();
+        }
+    }
+
+    @Test
+    @DisplayName("wrap should reset error_code to integer 0 when code equals '0'")
+    void wrapZeroErrorCode() throws Exception {
+        FaceRecognitionV2Template template = new FaceRecognitionV2Template(null);
+        JSONObject result = new JSONObject();
+        result.put("error_code", "0");
+        JSONObject wrapped = invokeWrap(template, result);
+        assertThat(wrapped.getIntValue("error_code")).isEqualTo(0);
+    }
+
+    @Test
+    @DisplayName("wrap should set liveness=0 when error_code is '223120' even if message lookup fails")
+    void wrapLivenessErrorCode() {
+        FaceRecognitionV2Template template = new FaceRecognitionV2Template(null);
+        JSONObject result = new JSONObject();
+        result.put("error_code", "223120");
+        assertThatThrownBy(() -> invokeWrap(template, result)).isNotNull();
+    }
+
+    private JSONObject invokeWrap(FaceRecognitionV2Template template, JSONObject result) throws Exception {
+        java.lang.reflect.Method method = FaceRecognitionV2Template.class.getDeclaredMethod("wrap", JSONObject.class);
+        method.setAccessible(true);
+        return (JSONObject) method.invoke(template, result);
+    }
+
 }

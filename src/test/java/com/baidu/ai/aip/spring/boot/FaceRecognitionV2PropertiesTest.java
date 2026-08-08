@@ -30,128 +30,54 @@ import static org.assertj.core.api.Assertions.assertThat;
  */
 @DisplayName("FaceRecognitionV2Properties Tests")
 class FaceRecognitionV2PropertiesTest {
-    @Test
-    @DisplayName("Default constructor creates non-null instance")
-    void testDefaultInstance() {
-        FaceRecognitionV2Properties props = new FaceRecognitionV2Properties();
-        assertThat(props).isNotNull();
-    }
 
     @Test
-    @DisplayName("Field 'enabled' can be set and read")
-    void testEnabledField() {
-        FaceRecognitionV2Properties props = new FaceRecognitionV2Properties();
-        // Use reflection to set private field (covers all fields including those without setters)
-        try {
-            java.lang.reflect.Field f = FaceRecognitionV2Properties.class.getDeclaredField("enabled");
-            f.setAccessible(true);
-            f.set(props, true);
-            Object value = f.get(props);
-            assertThat(value).isNotNull();
-        } catch (Exception e) {
-            // Field may have a more complex type; skip silently
-        }
-    }
-
-    @Test
-    @DisplayName("Field 'clientId' can be set and read")
-    void testClientIdField() {
-        FaceRecognitionV2Properties props = new FaceRecognitionV2Properties();
-        // Use reflection to set private field (covers all fields including those without setters)
-        try {
-            java.lang.reflect.Field f = FaceRecognitionV2Properties.class.getDeclaredField("clientId");
-            f.setAccessible(true);
-            f.set(props, "test");
-            Object value = f.get(props);
-            assertThat(value).isNotNull();
-        } catch (Exception e) {
-            // Field may have a more complex type; skip silently
-        }
-    }
-
-    @Test
-    @DisplayName("Field 'clientSecret' can be set and read")
-    void testClientSecretField() {
-        FaceRecognitionV2Properties props = new FaceRecognitionV2Properties();
-        // Use reflection to set private field (covers all fields including those without setters)
-        try {
-            java.lang.reflect.Field f = FaceRecognitionV2Properties.class.getDeclaredField("clientSecret");
-            f.setAccessible(true);
-            f.set(props, "test");
-            Object value = f.get(props);
-            assertThat(value).isNotNull();
-        } catch (Exception e) {
-            // Field may have a more complex type; skip silently
-        }
-    }
-
-    @Test
-    @DisplayName("Field 'maxFaceNum' can be set and read")
-    void testMaxFaceNumField() {
-        FaceRecognitionV2Properties props = new FaceRecognitionV2Properties();
-        // Use reflection to set private field (covers all fields including those without setters)
-        try {
-            java.lang.reflect.Field f = FaceRecognitionV2Properties.class.getDeclaredField("maxFaceNum");
-            f.setAccessible(true);
-            f.set(props, 42);
-            Object value = f.get(props);
-            assertThat(value).isNotNull();
-        } catch (Exception e) {
-            // Field may have a more complex type; skip silently
-        }
-    }
-
-    @Test
-    @DisplayName("Field 'faceFields' can be set and read")
-    void testFaceFieldsField() {
-        FaceRecognitionV2Properties props = new FaceRecognitionV2Properties();
-        // Use reflection to set private field (covers all fields including those without setters)
-        try {
-            java.lang.reflect.Field f = FaceRecognitionV2Properties.class.getDeclaredField("faceFields");
-            f.setAccessible(true);
-            f.set(props, "test");
-            Object value = f.get(props);
-            assertThat(value).isNotNull();
-        } catch (Exception e) {
-            // Field may have a more complex type; skip silently
-        }
-    }
-
-    @Test
-    @DisplayName("Field 'userTopNum' can be set and read")
-    void testUserTopNumField() {
-        FaceRecognitionV2Properties props = new FaceRecognitionV2Properties();
-        // Use reflection to set private field (covers all fields including those without setters)
-        try {
-            java.lang.reflect.Field f = FaceRecognitionV2Properties.class.getDeclaredField("userTopNum");
-            f.setAccessible(true);
-            f.set(props, 42);
-            Object value = f.get(props);
-            assertThat(value).isNotNull();
-        } catch (Exception e) {
-            // Field may have a more complex type; skip silently
-        }
-    }
-
-    @Test
-    @DisplayName("Field 'faceliveness' can be set and read")
-    void testFacelivenessField() {
-        FaceRecognitionV2Properties props = new FaceRecognitionV2Properties();
-        // Use reflection to set private field (covers all fields including those without setters)
-        try {
-            java.lang.reflect.Field f = FaceRecognitionV2Properties.class.getDeclaredField("faceliveness");
-            f.setAccessible(true);
-            f.set(props, 1.0);
-            Object value = f.get(props);
-            assertThat(value).isNotNull();
-        } catch (Exception e) {
-            // Field may have a more complex type; skip silently
-        }
-    }
-
-    @Test
-    @DisplayName("Public constant 'PREFIX' has expected value")
-    void testPREFIXConstant() {
+    @DisplayName("Should expose the expected PREFIX constant")
+    void prefixConstant() {
         assertThat(FaceRecognitionV2Properties.PREFIX).isEqualTo("baidu.face.v2");
     }
+
+    @Test
+    @DisplayName("Default values should match the documented defaults")
+    void defaults() {
+        FaceRecognitionV2Properties props = new FaceRecognitionV2Properties();
+        assertThat(props.isEnabled()).isFalse();
+        assertThat(props.getClientId()).isNull();
+        assertThat(props.getClientSecret()).isNull();
+        assertThat(props.getMaxFaceNum()).isEqualTo(1);
+        assertThat(props.getFaceFields()).isNotEmpty();
+        assertThat(props.getUserTopNum()).isEqualTo(1);
+        assertThat(props.getFaceliveness()).isEqualTo(0.834963);
+    }
+
+    @Test
+    @DisplayName("Getters and setters should round-trip every field")
+    void gettersAndSetters() {
+        FaceRecognitionV2Properties props = new FaceRecognitionV2Properties();
+
+        props.setEnabled(true);
+        props.setClientId("ak");
+        props.setClientSecret("sk");
+        props.setMaxFaceNum(5);
+        props.setFaceFields("age,gender");
+        props.setUserTopNum(3);
+        props.setFaceliveness(0.5);
+
+        assertThat(props.isEnabled()).isTrue();
+        assertThat(props.getClientId()).isEqualTo("ak");
+        assertThat(props.getClientSecret()).isEqualTo("sk");
+        assertThat(props.getMaxFaceNum()).isEqualTo(5);
+        assertThat(props.getFaceFields()).isEqualTo("age,gender");
+        assertThat(props.getUserTopNum()).isEqualTo(3);
+        assertThat(props.getFaceliveness()).isEqualTo(0.5);
+    }
+
+    @Test
+    @DisplayName("ToString should work for POJO usage")
+    void pojoContract() {
+        FaceRecognitionV2Properties props = new FaceRecognitionV2Properties();
+        assertThat(props.toString()).isNotNull();
+        assertThat(props).isEqualTo(props);
+    }
+
 }

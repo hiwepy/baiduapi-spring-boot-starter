@@ -30,9 +30,29 @@ import static org.assertj.core.api.Assertions.assertThat;
 class FaceOptionTest {
 
     @Test
-    @DisplayName("Instance can be created via constructor")
-    void testInstantiation() {
-        FaceOption instance = new FaceOption();
-        assertThat(instance).isNotNull();
+    @DisplayName("Should expose COMMON and GATE scene options")
+    void shouldExposeAllConstants() {
+        assertThat(FaceOption.values()).containsExactly(FaceOption.COMMON, FaceOption.GATE);
     }
+
+    @Test
+    @DisplayName("Should resolve constant by name")
+    void shouldResolveByName() {
+        assertThat(FaceOption.valueOf("GATE")).isEqualTo(FaceOption.GATE);
+    }
+
+    @Test
+    @DisplayName("Should have two distinct constants")
+    void shouldHaveTwoConstants() {
+        assertThat(FaceOption.values()).hasSize(2);
+    }
+
+    @Test
+    @DisplayName("Enum instances should be singletons")
+    void shouldBeSingletons() {
+        for (FaceOption value : FaceOption.values()) {
+            assertThat(value).isSameAs(FaceOption.valueOf(value.name()));
+        }
+    }
+
 }

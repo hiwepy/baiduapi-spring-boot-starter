@@ -17,6 +17,8 @@ package com.baidu.ai.aip.spring.boot;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.context.MessageSource;
+import org.springframework.context.support.MessageSourceAccessor;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -30,9 +32,27 @@ import static org.assertj.core.api.Assertions.assertThat;
 class FaceRecognitionMessageSourceTest {
 
     @Test
-    @DisplayName("Instance can be created via constructor")
-    void testInstantiation() {
-        FaceRecognitionMessageSource instance = new FaceRecognitionMessageSource();
-        assertThat(instance).isNotNull();
+    @DisplayName("Default constructor should create a non-null instance")
+    void constructorShouldCreateInstance() {
+        FaceRecognitionMessageSource source = new FaceRecognitionMessageSource();
+        assertThat(source).isNotNull();
     }
+
+    @Test
+    @DisplayName("getAccessor should return a non-null MessageSourceAccessor")
+    void getAccessorShouldReturnAccessor() {
+        MessageSourceAccessor accessor = FaceRecognitionMessageSource.getAccessor();
+        assertThat(accessor).isNotNull();
+        // The accessor should resolve to the configured default message for unknown codes
+        // (the bundle ships inside the main source tree and may not be resolvable at runtime).
+        assertThat(accessor.getMessage("unknown-code", "fallback", null)).isEqualTo("fallback");
+    }
+
+    @Test
+    @DisplayName("MessageSource should be a Spring MessageSource")
+    void shouldBeMessageSource() {
+        MessageSource source = new FaceRecognitionMessageSource();
+        assertThat(source).isInstanceOf(MessageSource.class);
+    }
+
 }

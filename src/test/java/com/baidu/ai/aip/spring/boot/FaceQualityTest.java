@@ -30,9 +30,30 @@ import static org.assertj.core.api.Assertions.assertThat;
 class FaceQualityTest {
 
     @Test
-    @DisplayName("Instance can be created via constructor")
-    void testInstantiation() {
-        FaceQuality instance = new FaceQuality();
-        assertThat(instance).isNotNull();
+    @DisplayName("Should expose all expected image quality control constants")
+    void shouldExposeAllConstants() {
+        assertThat(FaceQuality.values())
+            .containsExactly(FaceQuality.NONE, FaceQuality.LOW, FaceQuality.NORMAL, FaceQuality.HIGH);
     }
+
+    @Test
+    @DisplayName("Should resolve constant by name")
+    void shouldResolveByName() {
+        assertThat(FaceQuality.valueOf("LOW")).isEqualTo(FaceQuality.LOW);
+    }
+
+    @Test
+    @DisplayName("Should have four distinct constants")
+    void shouldHaveFourConstants() {
+        assertThat(FaceQuality.values()).hasSize(4);
+    }
+
+    @Test
+    @DisplayName("Enum instances should be singletons")
+    void shouldBeSingletons() {
+        for (FaceQuality value : FaceQuality.values()) {
+            assertThat(value).isSameAs(FaceQuality.valueOf(value.name()));
+        }
+    }
+
 }

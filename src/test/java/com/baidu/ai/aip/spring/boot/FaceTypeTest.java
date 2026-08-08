@@ -30,9 +30,30 @@ import static org.assertj.core.api.Assertions.assertThat;
 class FaceTypeTest {
 
     @Test
-    @DisplayName("Instance can be created via constructor")
-    void testInstantiation() {
-        FaceType instance = new FaceType();
-        assertThat(instance).isNotNull();
+    @DisplayName("Should expose all expected face type constants")
+    void shouldExposeAllConstants() {
+        assertThat(FaceType.values())
+            .containsExactly(FaceType.LIVE, FaceType.IDCARD, FaceType.WATERMARK, FaceType.CERT);
     }
+
+    @Test
+    @DisplayName("Should resolve constant by name")
+    void shouldResolveByName() {
+        assertThat(FaceType.valueOf("IDCARD")).isEqualTo(FaceType.IDCARD);
+    }
+
+    @Test
+    @DisplayName("Should have four distinct constants")
+    void shouldHaveFourConstants() {
+        assertThat(FaceType.values()).hasSize(4);
+    }
+
+    @Test
+    @DisplayName("Enum instances should be singletons")
+    void shouldBeSingletons() {
+        for (FaceType value : FaceType.values()) {
+            assertThat(value).isSameAs(FaceType.valueOf(value.name()));
+        }
+    }
+
 }

@@ -30,9 +30,24 @@ import static org.assertj.core.api.Assertions.assertThat;
 class AuthClientTest {
 
     @Test
-    @DisplayName("Instance can be created via constructor")
-    void testInstantiation() {
-        AuthClient instance = new AuthClient();
-        assertThat(instance).isNotNull();
+    @DisplayName("Instance can be created")
+    void instance() {
+        assertThat(new AuthClient()).isNotNull();
     }
+
+    @Test
+    @DisplayName("AUTH_HOST constant should be the baidu OAuth endpoint")
+    void authHostConstant() {
+        assertThat(AuthClient.AUTH_HOST).isEqualTo("https://aip.baidubce.com/oauth/2.0/token");
+    }
+
+    @Test
+    @DisplayName("getAuth with empty credentials should never throw and return null-or-token")
+    void getAuthWithEmptyCredentialsShouldBeSafe() {
+        // The method swallows all exceptions and returns null on failure; it must never throw.
+        // With empty credentials the OAuth endpoint rejects the request, so we expect null.
+        String token = AuthClient.getAuth("", "");
+        assertThat(token).isNull();
+    }
+
 }
