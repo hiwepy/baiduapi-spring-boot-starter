@@ -15,27 +15,24 @@
  */
 package com.baidu.ai.aip.spring.boot;
 
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+
+import static org.assertj.core.api.Assertions.assertThat;
+
 /**
- * 人脸的类型
+ * Unit tests for {{ @link FaceRecognitionMessageSource }}.
+ *
  * @author [@Loong Wan](https://github.com/loong10k)
+ * @since 1.0.0
  */
-public enum FaceType {
+@DisplayName("FaceRecognitionMessageSource Tests")
+class FaceRecognitionMessageSourceTest {
 
-	/**
-	 * 表示生活照：通常为手机、相机拍摄的人像图片、或从网络获取的人像图片等
-	 */
-	LIVE,
-	/**
-	 * 表示身份证芯片照：二代身份证内置芯片中的人像照片
-	 */
-	IDCARD,
-	/**
-	 * 表示带水印证件照：一般为带水印的小图，如公安网小图
-	 */
-	WATERMARK,
-	/**
-	 * 表示证件照片：如拍摄的身份证、工卡、护照、学生证等证件图片
-	 */
-	CERT;
-
+    @Test
+    @DisplayName("Instance can be created via constructor")
+    void testInstantiation() {
+        FaceRecognitionMessageSource instance = new FaceRecognitionMessageSource();
+        assertThat(instance).isNotNull();
+    }
 }
