@@ -26,7 +26,7 @@ import com.alibaba.fastjson2.JSONObject;
 
 /**
  * 注意：access_token的有效期为30天，切记需要每30天进行定期更换，或者每次请求都拉取新token；
- * @author ： <a href="https://github.com/hiwepy">wandl</a>
+ * @author [@Loong Wan](https://github.com/loong10k)
  */
 public class AuthClient {
 	

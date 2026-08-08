@@ -17,7 +17,7 @@ package com.baidu.ai.aip.spring.boot;
 
 /**
  * 人脸的类型
- * @author ： <a href="https://github.com/hiwepy">wandl</a>
+ * @author [@Loong Wan](https://github.com/loong10k)
  */
 public enum FaceType {
 
