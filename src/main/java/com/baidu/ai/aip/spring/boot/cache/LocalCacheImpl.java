@@ -24,6 +24,14 @@ import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.RemovalListener;
 import com.google.common.cache.RemovalNotification;
 
+/**
+ * Local cache implementation using Guava Cache with configurable size and expiry.
+ *
+ * @param <K> the cache key type
+ * @param <V> the cache value type
+ * @author [@Loong Wan](https://github.com/loong10k)
+ * @since 1.0.0
+ */
 public class LocalCacheImpl<K, V> implements LocalCache<K, V> {
 	private static final long MAX_SIZE = 65535;
 	private static final long EXPIRE_TIME = 10;
