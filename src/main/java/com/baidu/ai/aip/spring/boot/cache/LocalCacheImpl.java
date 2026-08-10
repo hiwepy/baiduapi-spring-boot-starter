@@ -29,7 +29,7 @@ import com.google.common.cache.RemovalNotification;
  *
  * @param <K> the cache key type
  * @param <V> the cache value type
- * @author [@Loong Wan](https://github.com/loong10k)
+ * @author <a href="https://github.com/loong10k">Loong Wan</a>
  * @since 1.0.0
  */
 public class LocalCacheImpl<K, V> implements LocalCache<K, V> {

@@ -37,7 +37,7 @@ import static org.assertj.core.api.Assertions.assertThat;
  * <p>Exercises the POST helper variants against an in-process HTTP server so the
  * encoding branches (UTF-8 vs GBK for NLP endpoints) are both executed.</p>
  *
- * @author [@Loong Wan](https://github.com/loong10k)
+ * @author <a href="https://github.com/loong10k">Loong Wan</a>
  * @since 1.0.0
  */
 @DisplayName("HttpUtil Tests")
