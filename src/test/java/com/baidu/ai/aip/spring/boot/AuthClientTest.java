@@ -15,19 +15,79 @@
  */
 package com.baidu.ai.aip.spring.boot;
 
+import java.io.IOException;
+import java.io.OutputStream;
+import java.net.InetSocketAddress;
+import java.nio.charset.StandardCharsets;
+
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+
+import com.sun.net.httpserver.HttpExchange;
+import com.sun.net.httpserver.HttpHandler;
+import com.sun.net.httpserver.HttpServer;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 /**
- * Unit tests for {{ @link AuthClient }}.
+ * Unit tests for {@link AuthClient}.
  *
  * @author <a href="https://github.com/loong10k">Loong Wan</a>
  * @since 1.0.0
  */
 @DisplayName("AuthClient Tests")
 class AuthClientTest {
+
+    private static String originalHost;
+    private HttpServer server;
+
+    @BeforeAll
+    static void saveOriginalHost() {
+        originalHost = AuthClient.AUTH_HOST;
+    }
+
+    @AfterAll
+    static void restoreOriginalHost() {
+        AuthClient.AUTH_HOST = originalHost;
+    }
+
+    @BeforeEach
+    void startServer() throws IOException {
+        server = HttpServer.create(new InetSocketAddress("127.0.0.1", 0), 0);
+        server.createContext("/oauth/2.0/token", new HttpHandler() {
+            @Override
+            public void handle(HttpExchange exchange) throws IOException {
+                String query = exchange.getRequestURI().getQuery();
+                boolean valid = query != null && query.contains("client_id=test-ak")
+                        && query.contains("client_secret=test-sk");
+                byte[] response;
+                if (valid) {
+                    response = "{\"access_token\":\"fake-token-123\",\"expires_in\":2592000}"
+                            .getBytes(StandardCharsets.UTF_8);
+                } else {
+                    response = "{\"error\":\"invalid_client\"}".getBytes(StandardCharsets.UTF_8);
+                }
+                exchange.getResponseHeaders().set("Content-Type", "application/json");
+                exchange.sendResponseHeaders(valid ? 200 : 400, response.length);
+                try (OutputStream os = exchange.getResponseBody()) {
+                    os.write(response);
+                }
+            }
+        });
+        server.start();
+        AuthClient.AUTH_HOST = "http://127.0.0.1:" + server.getAddress().getPort() + "/oauth/2.0/token";
+    }
+
+    @AfterEach
+    void stopServer() {
+        if (server != null) {
+            server.stop(0);
+        }
+    }
 
     @Test
     @DisplayName("Instance can be created")
@@ -38,14 +98,28 @@ class AuthClientTest {
     @Test
     @DisplayName("AUTH_HOST constant should be the baidu OAuth endpoint")
     void authHostConstant() {
-        assertThat(AuthClient.AUTH_HOST).isEqualTo("https://aip.baidubce.com/oauth/2.0/token");
+        assertThat(originalHost).isEqualTo("https://aip.baidubce.com/oauth/2.0/token");
     }
 
     @Test
-    @DisplayName("getAuth with empty credentials should never throw and return null-or-token")
+    @DisplayName("getAuth with valid credentials should return an access token")
+    void getAuthWithValidCredentials() {
+        String token = AuthClient.getAuth("test-ak", "test-sk");
+        assertThat(token).isEqualTo("fake-token-123");
+    }
+
+    @Test
+    @DisplayName("getAuth with invalid credentials should return null")
+    void getAuthWithInvalidCredentials() {
+        String token = AuthClient.getAuth("wrong-ak", "wrong-sk");
+        assertThat(token).isNull();
+    }
+
+    @Test
+    @DisplayName("getAuth with empty credentials should never throw and return null")
     void getAuthWithEmptyCredentialsShouldBeSafe() {
-        // The method swallows all exceptions and returns null on failure; it must never throw.
-        // With empty credentials the OAuth endpoint rejects the request, so we expect null.
+        // Empty credentials -> server returns400 -> exception caught -> null
+        AuthClient.AUTH_HOST = originalHost;
         String token = AuthClient.getAuth("", "");
         assertThat(token).isNull();
     }

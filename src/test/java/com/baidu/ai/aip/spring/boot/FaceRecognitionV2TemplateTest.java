@@ -23,13 +23,12 @@ import com.alibaba.fastjson2.JSONObject;
 import com.baidu.ai.aip.utils.HttpUtil;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mockStatic;
 
 /**
- * Unit tests for {{ @link FaceRecognitionV2Template }}.
+ * Unit tests for {@link FaceRecognitionV2Template}.
  *
  * @author <a href="https://github.com/loong10k">Loong Wan</a>
  * @since 1.0.0
@@ -81,7 +80,6 @@ class FaceRecognitionV2TemplateTest {
     @DisplayName("All network methods should execute their success path and return wrapped result")
     void networkMethodsShouldReturnWrappedResult() {
         FaceRecognitionV2Template template = new FaceRecognitionV2Template(properties());
-        // Stub AuthClient and HttpUtil so the full request-construction path is deterministic.
         try (MockedStatic<AuthClient> auth = mockStatic(AuthClient.class);
              MockedStatic<HttpUtil> http = mockStatic(HttpUtil.class)) {
             auth.when(() -> AuthClient.getAuth(anyString(), anyString())).thenReturn("token");
@@ -110,6 +108,31 @@ class FaceRecognitionV2TemplateTest {
     }
 
     @Test
+    @DisplayName("All network methods should return null when AuthClient throws")
+    void networkMethodsShouldReturnNullOnAuthFailure() {
+        FaceRecognitionV2Template template = new FaceRecognitionV2Template(properties());
+        try (MockedStatic<AuthClient> auth = mockStatic(AuthClient.class)) {
+            auth.when(() -> AuthClient.getAuth(anyString(), anyString()))
+                .thenThrow(new RuntimeException("auth service unavailable"));
+
+            assertThat(template.detect("img")).isNull();
+            assertThat(template.detect(new byte[] { 1, 2 })).isNull();
+            assertThat(template.match("a", "b", "x", "y")).isNull();
+            assertThat(template.search("img", "g")).isNull();
+            assertThat(template.faceNew("img", "g", "u", "i")).isNull();
+            assertThat(template.faceRenew("img", "g", "u", "i")).isNull();
+            assertThat(template.faceDelete("g", "u")).isNull();
+            assertThat(template.faceInfo("g", "u")).isNull();
+            assertThat(template.faceUsers("g", 0, 100)).isNull();
+            assertThat(template.groupList(0, 100)).isNull();
+            assertThat(template.userCopy("g", "u", "t")).isNull();
+            assertThat(template.userDelete("g", "u")).isNull();
+            assertThat(template.personverify("img", "id", "name")).isNull();
+            assertThat(template.faceVerify("img")).isNull();
+        }
+    }
+
+    @Test
     @DisplayName("wrap should reset error_code to integer 0 when code equals '0'")
     void wrapZeroErrorCode() throws Exception {
         FaceRecognitionV2Template template = new FaceRecognitionV2Template(null);
@@ -120,12 +143,24 @@ class FaceRecognitionV2TemplateTest {
     }
 
     @Test
-    @DisplayName("wrap should set liveness=0 when error_code is '223120' even if message lookup fails")
-    void wrapLivenessErrorCode() {
+    @DisplayName("wrap should add error_msg for known non-zero error codes")
+    void wrapNonZeroErrorCode() throws Exception {
+        FaceRecognitionV2Template template = new FaceRecognitionV2Template(null);
+        JSONObject result = new JSONObject();
+        result.put("error_code", "222001");
+        JSONObject wrapped = invokeWrap(template, result);
+        assertThat(wrapped.getString("error_msg")).isNotBlank();
+    }
+
+    @Test
+    @DisplayName("wrap should set liveness=0 when error_code is '223120'")
+    void wrapLivenessErrorCode() throws Exception {
         FaceRecognitionV2Template template = new FaceRecognitionV2Template(null);
         JSONObject result = new JSONObject();
         result.put("error_code", "223120");
-        assertThatThrownBy(() -> invokeWrap(template, result)).isNotNull();
+        JSONObject wrapped = invokeWrap(template, result);
+        assertThat(wrapped.getIntValue("liveness")).isEqualTo(0);
+        assertThat(wrapped.getString("error_msg")).isNotBlank();
     }
 
     private JSONObject invokeWrap(FaceRecognitionV2Template template, JSONObject result) throws Exception {

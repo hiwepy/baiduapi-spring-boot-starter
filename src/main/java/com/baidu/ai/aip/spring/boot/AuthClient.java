@@ -30,7 +30,8 @@ import com.alibaba.fastjson2.JSONObject;
  */
 public class AuthClient {
 	
-	public static final String AUTH_HOST = "https://aip.baidubce.com/oauth/2.0/token";
+	/** OAuth endpoint – non-final so that tests can redirect to a local server. */
+	static String AUTH_HOST = "https://aip.baidubce.com/oauth/2.0/token";
 
 	/**
 	 * 获取API访问token 该token有一定的有效期，需要自行管理，当失效时需重新获取.
