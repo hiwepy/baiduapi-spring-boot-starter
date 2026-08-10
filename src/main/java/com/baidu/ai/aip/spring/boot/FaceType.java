@@ -17,7 +17,7 @@ package com.baidu.ai.aip.spring.boot;
 
 /**
  * 人脸的类型
- * @author [@Loong Wan](https://github.com/loong10k)
+ * @author <a href="https://github.com/loong10k">Loong Wan</a>
  */
 public enum FaceType {
 

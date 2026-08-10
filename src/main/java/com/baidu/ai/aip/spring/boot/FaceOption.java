@@ -17,7 +17,7 @@ package com.baidu.ai.aip.spring.boot;
 
 /**
  * 场景信息，程序会视不同的场景选用相对应的模型。当前支持的场景有COMMON(通用场景)，GATE(闸机场景)，默认使用COMMON
- * @author [@Loong Wan](https://github.com/loong10k)
+ * @author <a href="https://github.com/loong10k">Loong Wan</a>
  */
 public enum FaceOption {
 	 
