@@ -142,6 +142,33 @@ class FaceRecognitionV3TemplateTest {
     }
 
     @Test
+    @DisplayName("Network methods should swallow transport failures and return null")
+    void networkMethodsShouldReturnNullOnFailure() {
+        FaceRecognitionV3Template template = new FaceRecognitionV3Template(properties());
+        try (MockedStatic<AuthClient> auth = mockStatic(AuthClient.class);
+             MockedStatic<HttpUtil> http = mockStatic(HttpUtil.class)) {
+            auth.when(() -> AuthClient.getAuth(anyString(), anyString())).thenReturn("token");
+            http.when(() -> HttpUtil.post(anyString(), anyString(), anyString(), anyString()))
+                .thenThrow(new RuntimeException("connection refused"));
+
+            assertThat(template.detect(new byte[] { 1 })).isNull();
+            assertThat(template.detect("img")).isNull();
+            assertThat(template.match(new byte[] { 1 }, new byte[] { 2 })).isNull();
+            assertThat(template.match("img1", "img2")).isNull();
+            assertThat(template.search("img", "group")).isNull();
+            assertThat(template.faceDelete("g", "u", "token")).isNull();
+            assertThat(template.faceInfo("g", "u")).isNull();
+            assertThat(template.faceUsers("g", 0, 100)).isNull();
+            assertThat(template.userCopy("g", "u", "tg")).isNull();
+            assertThat(template.groupNew("g")).isNull();
+            assertThat(template.groupList(0, 100)).isNull();
+            assertThat(template.personverify("img", "id", "name")).isNull();
+            assertThat(template.faceVerify("img", FaceOption.COMMON)).isNull();
+            assertThat(template.merge("tpl", "tgt")).isNull();
+        }
+    }
+
+    @Test
     @DisplayName("wrap should reset error_code to 0 when code equals '0'")
     void wrapZeroErrorCode() throws Exception {
         FaceRecognitionV3Template template = new FaceRecognitionV3Template(null);
@@ -161,12 +188,14 @@ class FaceRecognitionV3TemplateTest {
     }
 
     @Test
-    @DisplayName("wrap should set liveness=0 when error_code is '223120' even if message lookup fails")
-    void wrapLivenessErrorCode() {
+    @DisplayName("wrap should set liveness=0 and add error_msg when error_code is '223120'")
+    void wrapLivenessErrorCode() throws Exception {
         FaceRecognitionV3Template template = new FaceRecognitionV3Template(null);
         JSONObject result = new JSONObject();
         result.put("error_code", "223120");
-        assertThatThrownBy(() -> invokeWrap(template, result)).isNotNull();
+        JSONObject wrapped = invokeWrap(template, result);
+        assertThat(wrapped.getIntValue("liveness")).isEqualTo(0);
+        assertThat(wrapped.getString("error_msg")).isNotBlank();
     }
 
     private JSONObject invokeWrap(FaceRecognitionV3Template template, JSONObject result) throws Exception {
