@@ -40,6 +40,7 @@ import com.google.common.cache.RemovalNotification;
  * TODO
  * 
  * @author <a href="https://github.com/loong10k">Loong Wan</a>
+ * @since 1.0.0
  */
 
 public class FaceRecognitionV3Template {
@@ -108,6 +109,11 @@ public class FaceRecognitionV3Template {
 			// 设置缓存的移除通知
 			.removalListener(new RemovalListener<String, Optional<String>>() {
 				@Override
+				/**
+				 * on Removal.
+				 *
+				 * @param notification the notification
+				 */
 				public void onRemoval(RemovalNotification<String, Optional<String>> notification) {
 					System.out.println(notification.getKey() + " was removed, cause is " + notification.getCause());
 				}
@@ -116,6 +122,13 @@ public class FaceRecognitionV3Template {
 			.build(new CacheLoader<String, Optional<String>>() {
 
 				@Override
+				/**
+				 * load.
+				 *
+				 * @param keySecret the key secret
+				 * @return the result
+				 * @throws Exception if an error occurs
+				 */
 				public Optional<String> load(String keySecret) throws Exception {
 					JSONObject key = JSONObject.parseObject(keySecret);
 					String token = AuthClient.getAuth(key.getString("clientId"), key.getString("clientSecret"));
@@ -144,10 +157,23 @@ public class FaceRecognitionV3Template {
 
 	}
 
+	/**
+	 * detect.
+	 *
+	 * @param imageBytes the image bytes
+	 * @return the result
+	 */
 	public JSONObject detect(byte[] imageBytes) {
 		return detect(imageBytes, FaceType.LIVE);
 	}
 	
+	/**
+	 * detect.
+	 *
+	 * @param imageBytes the image bytes
+	 * @param face_type the face_type
+	 * @return the result
+	 */
 	public JSONObject detect(byte[] imageBytes, FaceType face_type) {
 		return detect(imageBytes, face_type, FaceLiveness.NONE);
 	}
@@ -176,10 +202,23 @@ public class FaceRecognitionV3Template {
 		return null;
 	}
 	
+	/**
+	 * detect.
+	 *
+	 * @param imageBase64 the image base64
+	 * @return the result
+	 */
 	public JSONObject detect(String imageBase64) {
 		return detect(imageBase64, FaceType.LIVE);
 	}
 	
+	/**
+	 * detect.
+	 *
+	 * @param imageBase64 the image base64
+	 * @param face_type the face_type
+	 * @return the result
+	 */
 	public JSONObject detect(String imageBase64, FaceType face_type) {
 		return detect(imageBase64, face_type, FaceLiveness.NONE);
 	}
@@ -244,14 +283,38 @@ public class FaceRecognitionV3Template {
 		return null;
 	}
 	
+	/**
+	 * match.
+	 *
+	 * @param imageBytes_1 the image bytes_1
+	 * @param imageBytes_2 the image bytes_2
+	 * @return the result
+	 */
 	public JSONObject match(byte[] imageBytes_1, byte[] imageBytes_2) {
 		return match(imageBytes_1, imageBytes_2, FaceType.LIVE);
 	}
 	
+	/**
+	 * match.
+	 *
+	 * @param imageBytes_1 the image bytes_1
+	 * @param imageBytes_2 the image bytes_2
+	 * @param face_type the face_type
+	 * @return the result
+	 */
 	public JSONObject match(byte[] imageBytes_1, byte[] imageBytes_2, FaceType face_type) {
 		return match(imageBytes_1, imageBytes_2, face_type, FaceQuality.LOW);
 	}
 	
+	/**
+	 * match.
+	 *
+	 * @param imageBytes_1 the image bytes_1
+	 * @param imageBytes_2 the image bytes_2
+	 * @param face_type the face_type
+	 * @param quality the quality
+	 * @return the result
+	 */
 	public JSONObject match(byte[] imageBytes_1, byte[] imageBytes_2, FaceType face_type, FaceQuality quality) {
 		return match(imageBytes_1, imageBytes_2, face_type, quality, FaceLiveness.NORMAL);
 	}
@@ -279,14 +342,38 @@ public class FaceRecognitionV3Template {
 		return match(imageBase64_1, imageBase64_2, face_type, quality, liveness);
 	}
 
+	/**
+	 * match.
+	 *
+	 * @param imageBase64_1 the image base64_1
+	 * @param imageBase64_2 the image base64_2
+	 * @return the result
+	 */
 	public JSONObject match(String imageBase64_1, String imageBase64_2) {
 		return match(imageBase64_1, imageBase64_2, FaceType.LIVE);
 	}
 	
+	/**
+	 * match.
+	 *
+	 * @param imageBase64_1 the image base64_1
+	 * @param imageBase64_2 the image base64_2
+	 * @param face_type the face_type
+	 * @return the result
+	 */
 	public JSONObject match(String imageBase64_1, String imageBase64_2, FaceType face_type) {
 		return match(imageBase64_1, imageBase64_2, face_type, FaceQuality.LOW);
 	}
 	
+	/**
+	 * match.
+	 *
+	 * @param imageBase64_1 the image base64_1
+	 * @param imageBase64_2 the image base64_2
+	 * @param face_type the face_type
+	 * @param quality the quality
+	 * @return the result
+	 */
 	public JSONObject match(String imageBase64_1, String imageBase64_2, FaceType face_type, FaceQuality quality) {
 		return match(imageBase64_1, imageBase64_2, face_type, quality,  FaceLiveness.NORMAL);
 	}
@@ -348,20 +435,50 @@ public class FaceRecognitionV3Template {
 		return null;
 	}
 	
+	/**
+	 * search.
+	 *
+	 * @param imageBytes the image bytes
+	 * @param group_id_list the group_id_list
+	 * @return the result
+	 */
 	public JSONObject search(byte[] imageBytes, String group_id_list) {
 		String imageBase64 = Base64Util.encode(imageBytes);
 		return search(imageBase64, group_id_list, FaceQuality.LOW);
 	}
 	
+	/**
+	 * search.
+	 *
+	 * @param imageBytes the image bytes
+	 * @param group_id_list the group_id_list
+	 * @param quality the quality
+	 * @return the result
+	 */
 	public JSONObject search(byte[] imageBytes, String group_id_list, FaceQuality quality) {
 		String imageBase64 = Base64Util.encode(imageBytes);
 		return search(imageBase64, group_id_list, quality, FaceLiveness.NORMAL);
 	}
 	
+	/**
+	 * search.
+	 *
+	 * @param imageBase64 the image base64
+	 * @param group_id_list the group_id_list
+	 * @return the result
+	 */
 	public JSONObject search(String imageBase64, String group_id_list) {
 		return search(imageBase64, group_id_list, FaceQuality.LOW);
 	}
 	
+	/**
+	 * search.
+	 *
+	 * @param imageBase64 the image base64
+	 * @param group_id_list the group_id_list
+	 * @param quality the quality
+	 * @return the result
+	 */
 	public JSONObject search(String imageBase64, String group_id_list, FaceQuality quality) {
 		return search(imageBase64, group_id_list, quality, FaceLiveness.NORMAL);
 	}
@@ -762,20 +879,54 @@ public class FaceRecognitionV3Template {
 	}
 	
 	
+	/**
+	 * personverify.
+	 *
+	 * @param imageBytes the image bytes
+	 * @param id_card_number the id_card_number
+	 * @param name the name
+	 * @return the result
+	 */
 	public JSONObject personverify(byte[] imageBytes, String id_card_number, String name) {
 		String imageBase64 = Base64Util.encode(imageBytes);
 		return personverify(imageBase64, id_card_number, name, FaceQuality.LOW);
 	}
 	
+	/**
+	 * personverify.
+	 *
+	 * @param imageBytes the image bytes
+	 * @param id_card_number the id_card_number
+	 * @param name the name
+	 * @param quality the quality
+	 * @return the result
+	 */
 	public JSONObject personverify(byte[] imageBytes, String id_card_number, String name, FaceQuality quality) {
 		String imageBase64 = Base64Util.encode(imageBytes);
 		return personverify(imageBase64, id_card_number, name, quality, FaceLiveness.HIGH);
 	}
 	
+	/**
+	 * personverify.
+	 *
+	 * @param imageBase64 the image base64
+	 * @param id_card_number the id_card_number
+	 * @param name the name
+	 * @return the result
+	 */
 	public JSONObject personverify(String imageBase64, String id_card_number, String name) {
 		return personverify(imageBase64, id_card_number, name, FaceQuality.LOW);
 	}
 	
+	/**
+	 * personverify.
+	 *
+	 * @param imageBase64 the image base64
+	 * @param id_card_number the id_card_number
+	 * @param name the name
+	 * @param quality the quality
+	 * @return the result
+	 */
 	public JSONObject personverify(String imageBase64, String id_card_number, String name, FaceQuality quality) {
 		return personverify(imageBase64, id_card_number, name, quality, FaceLiveness.HIGH);
 	}
@@ -819,6 +970,13 @@ public class FaceRecognitionV3Template {
         return null;
     }
 	
+	/**
+	 * face Verify.
+	 *
+	 * @param imageBytes the image bytes
+	 * @param option the option
+	 * @return the result
+	 */
 	public JSONObject faceVerify(byte[] imageBytes, FaceOption option) {
 		String imageBase64 = Base64Util.encode(imageBytes);
 		return faceVerify(imageBase64, option);
@@ -855,6 +1013,13 @@ public class FaceRecognitionV3Template {
         return null;
     }
 	
+	/**
+	 * merge.
+	 *
+	 * @param templateBytes the template bytes
+	 * @param targetBytes the target bytes
+	 * @return the result
+	 */
 	public JSONObject merge(byte[] templateBytes, byte[] targetBytes) {
 		String templateBase64 = Base64Util.encode(templateBytes);
 		String targetBase64 = Base64Util.encode(targetBytes);
@@ -895,6 +1060,11 @@ public class FaceRecognitionV3Template {
 		return null;
 	}
 	
+	/**
+	 * Returns the properties.
+	 *
+	 * @return the properties
+	 */
 	public FaceRecognitionV3Properties getProperties() {
 		return properties;
 	}

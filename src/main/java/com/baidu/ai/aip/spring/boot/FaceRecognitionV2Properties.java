@@ -17,6 +17,12 @@ package com.baidu.ai.aip.spring.boot;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
+/**
+ * <p>Configuration properties.</p>
+ *
+ * @author <a href="https://github.com/loong10k">Loong Wan</a>
+ * @since 1.0.0
+ */
 @ConfigurationProperties(FaceRecognitionV2Properties.PREFIX)
 public class FaceRecognitionV2Properties {
 
@@ -52,58 +58,128 @@ public class FaceRecognitionV2Properties {
 	private	double faceliveness = 0.834963;
 	
 
+	/**
+	 * Returns the enabled.
+	 *
+	 * @return the enabled
+	 */
 	public boolean isEnabled() {
 		return enabled;
 	}
 
+	/**
+	 * Sets the enabled.
+	 *
+	 * @param enabled the enabled
+	 */
 	public void setEnabled(boolean enabled) {
 		this.enabled = enabled;
 	}
 
+	/**
+	 * Returns the client id.
+	 *
+	 * @return the client id
+	 */
 	public String getClientId() {
 		return clientId;
 	}
 
+	/**
+	 * Sets the client id.
+	 *
+	 * @param clientId the client id
+	 */
 	public void setClientId(String clientId) {
 		this.clientId = clientId;
 	}
 
+	/**
+	 * Returns the client secret.
+	 *
+	 * @return the client secret
+	 */
 	public String getClientSecret() {
 		return clientSecret;
 	}
 
+	/**
+	 * Sets the client secret.
+	 *
+	 * @param clientSecret the client secret
+	 */
 	public void setClientSecret(String clientSecret) {
 		this.clientSecret = clientSecret;
 	}
 
+	/**
+	 * Returns the max face num.
+	 *
+	 * @return the max face num
+	 */
 	public int getMaxFaceNum() {
 		return maxFaceNum;
 	}
 
+	/**
+	 * Sets the max face num.
+	 *
+	 * @param maxFaceNum the max face num
+	 */
 	public void setMaxFaceNum(int maxFaceNum) {
 		this.maxFaceNum = maxFaceNum;
 	}
 
+	/**
+	 * Returns the face fields.
+	 *
+	 * @return the face fields
+	 */
 	public String getFaceFields() {
 		return faceFields;
 	}
 
+	/**
+	 * Sets the face fields.
+	 *
+	 * @param faceFields the face fields
+	 */
 	public void setFaceFields(String faceFields) {
 		this.faceFields = faceFields;
 	}
 
+	/**
+	 * Returns the user top num.
+	 *
+	 * @return the user top num
+	 */
 	public int getUserTopNum() {
 		return userTopNum;
 	}
 
+	/**
+	 * Sets the user top num.
+	 *
+	 * @param userTopNum the user top num
+	 */
 	public void setUserTopNum(int userTopNum) {
 		this.userTopNum = userTopNum;
 	}
 
+	/**
+	 * Returns the faceliveness.
+	 *
+	 * @return the faceliveness
+	 */
 	public double getFaceliveness() {
 		return faceliveness;
 	}
 
+	/**
+	 * Sets the faceliveness.
+	 *
+	 * @param faceliveness the faceliveness
+	 */
 	public void setFaceliveness(double faceliveness) {
 		this.faceliveness = faceliveness;
 	}

@@ -35,6 +35,7 @@ import com.google.common.cache.RemovalNotification;
 /**
  * 
  * @author <a href="https://github.com/loong10k">Loong Wan</a>
+ * @since 1.0.0
  */
 
 public class FaceRecognitionV2Template {
@@ -95,6 +96,11 @@ public class FaceRecognitionV2Template {
 			// 设置缓存的移除通知
 			.removalListener(new RemovalListener<String, Optional<String>>() {
 				@Override
+				/**
+				 * on Removal.
+				 *
+				 * @param notification the notification
+				 */
 				public void onRemoval(RemovalNotification<String, Optional<String>> notification) {
 					System.out.println(notification.getKey() + " was removed, cause is " + notification.getCause());
 				}
@@ -103,6 +109,13 @@ public class FaceRecognitionV2Template {
 			.build(new CacheLoader<String, Optional<String>>() {
 
 				@Override
+				/**
+				 * load.
+				 *
+				 * @param keySecret the key secret
+				 * @return the result
+				 * @throws Exception if an error occurs
+				 */
 				public Optional<String> load(String keySecret) throws Exception {
 					JSONObject key = JSONObject.parseObject(keySecret);
 					String token = AuthClient.getAuth(key.getString("clientId"), key.getString("clientSecret"));
@@ -177,10 +190,25 @@ public class FaceRecognitionV2Template {
 		return null;
 	}
 
+	/**
+	 * match.
+	 *
+	 * @param imageBytes_1 the image bytes_1
+	 * @param imageBytes_2 the image bytes_2
+	 * @return the result
+	 */
 	public JSONObject match(byte[] imageBytes_1, byte[] imageBytes_2) {
 		return match(imageBytes_1, imageBytes_2, "faceliveness,faceliveness", "7,7");
 	}
 	
+	/**
+	 * match.
+	 *
+	 * @param imageBytes_1 the image bytes_1
+	 * @param imageBytes_2 the image bytes_2
+	 * @param image_liveness the image_liveness
+	 * @return the result
+	 */
 	public JSONObject match(byte[] imageBytes_1, byte[] imageBytes_2, String image_liveness) {
 		return match(imageBytes_1, imageBytes_2, image_liveness, "7,7");
 	}
@@ -207,10 +235,25 @@ public class FaceRecognitionV2Template {
 		return match(imageBase64_1, imageBase64_2, image_liveness, types);
 	}
 	
+	/**
+	 * match.
+	 *
+	 * @param imageBase64_1 the image base64_1
+	 * @param imageBase64_2 the image base64_2
+	 * @return the result
+	 */
 	public JSONObject match(String imageBase64_1, String imageBase64_2) {
 		return match(imageBase64_1, imageBase64_2, "faceliveness,faceliveness", "7,7");
 	}
 	
+	/**
+	 * match.
+	 *
+	 * @param imageBase64_1 the image base64_1
+	 * @param imageBase64_2 the image base64_2
+	 * @param image_liveness the image_liveness
+	 * @return the result
+	 */
 	public JSONObject match(String imageBase64_1, String imageBase64_2, String image_liveness) {
 		return match(imageBase64_1, imageBase64_2, image_liveness, "7,7");
 	}
@@ -569,6 +612,11 @@ public class FaceRecognitionV2Template {
         return null;
     }
 	
+	/**
+	 * Returns the properties.
+	 *
+	 * @return the properties
+	 */
 	public FaceRecognitionV2Properties getProperties() {
 		return properties;
 	}

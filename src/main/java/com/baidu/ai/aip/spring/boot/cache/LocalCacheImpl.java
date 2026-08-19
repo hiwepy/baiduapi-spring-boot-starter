@@ -38,15 +38,33 @@ public class LocalCacheImpl<K, V> implements LocalCache<K, V> {
 	private Cache<K, Optional<V>> caches = CacheBuilder.newBuilder().maximumSize(MAX_SIZE)
 			.expireAfterAccess(EXPIRE_TIME, TimeUnit.SECONDS).removalListener(new RemovalListener<K, Optional<V>>() {
 				@Override
+				/**
+				 * on Removal.
+				 *
+				 * @param notification the notification
+				 */
 				public void onRemoval(RemovalNotification<K, Optional<V>> notification) {
 					// TODO 
 				}
 			}).build();
 
 	@Override
+	/**
+	 * get.
+	 *
+	 * @param key the key
+	 * @return the result
+	 * @throws Exception if an error occurs
+	 */
 	public V get(K key) throws Exception {
 		Optional<V> opt = caches.get(key, new Callable<Optional<V>>() {
 			@Override
+			/**
+			 * call.
+			 *
+			 * @return the result
+			 * @throws Exception if an error occurs
+			 */
 			public Optional<V> call() throws Exception {
 				// TODO获取数据，加入缓存
 				return Optional.fromNullable(null);
@@ -56,11 +74,22 @@ public class LocalCacheImpl<K, V> implements LocalCache<K, V> {
 	}
 
 	@Override
+	/**
+	 * put.
+	 *
+	 * @param key the key
+	 * @param value the value
+	 */
 	public void put(K key, V value) {
 		caches.put(key, Optional.of(value));
 	}
 
 	@Override
+	/**
+	 * remove.
+	 *
+	 * @param key the key
+	 */
 	public void remove(Object key) {
 		caches.invalidate(key);
 	}

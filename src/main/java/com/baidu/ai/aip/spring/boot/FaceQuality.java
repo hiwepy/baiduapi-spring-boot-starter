@@ -18,6 +18,7 @@ package com.baidu.ai.aip.spring.boot;
 /**
  * 图片质量控制
  * @author <a href="https://github.com/loong10k">Loong Wan</a>
+ * @since 1.0.0
  */
 public enum FaceQuality {
 	 
